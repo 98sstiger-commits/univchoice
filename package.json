@@ -1,0 +1,12 @@
+{
+  "name": "univchoice",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.36.0",
+    "@supabase/supabase-js": "^2.50.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
