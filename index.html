@@ -289,10 +289,18 @@ async function extractPdfText(file) {
 
 /* ── HomeScreen ── */
 function HomeScreen({ onStart }) {
+  const [showHistory, setShowHistory] = useState(false);
   return (
     <div className="home-wrap">
       <div className="home-top">
-        <div className="home-wordmark">Uni<span>Choice</span></div>
+        <div className="home-wordmark" style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A2E55" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 10.5L12 3L21 10.5V21H15V15H9V21H3V10.5Z"/>
+            <rect x="6.5" y="11.5" width="3" height="3" rx="0.4" fill="#1A2E55" stroke="none"/>
+            <rect x="14.5" y="11.5" width="3" height="3" rx="0.4" fill="#1A2E55" stroke="none"/>
+          </svg>
+          Uni<span>Choice</span>
+        </div>
         <div className="home-sub">생기부 · 내신 기반 대입 수시 배치 분석</div>
       </div>
       <div className="home-divider" />
@@ -325,13 +333,38 @@ function HomeScreen({ onStart }) {
         </div>
       </div>
       <div className="home-minis">
-        <div className="home-mini">
-          <div className="home-mini-ico" style={{ background:'#1A2E55' }}>DB</div>
-          <div><div className="home-mini-t">입결 데이터</div><div className="home-mini-s">2021–2026 대교협</div></div>
+        <div className="home-mini" style={{cursor:'pointer',flexDirection:'column',alignItems:'stretch'}}
+             onClick={() => setShowHistory(h => !h)}>
+          <div style={{display:'flex',alignItems:'center',gap:10}}>
+            <div className="home-mini-ico" style={{background:'#374151'}}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+            </div>
+            <div>
+              <div className="home-mini-t">최근 분석 이력</div>
+              <div className="home-mini-s">최근 상담 학생 목록</div>
+            </div>
+          </div>
+          {showHistory && (
+            <div style={{marginTop:10,paddingTop:10,borderTop:'1px solid #F3F4F6',fontSize:11,color:'#9CA3AF',textAlign:'center'}}>
+              아직 분석 이력이 없습니다
+            </div>
+          )}
         </div>
         <div className="home-mini">
-          <div className="home-mini-ico" style={{ background:'#047857' }}>AI</div>
-          <div><div className="home-mini-t">AI 자동 분석</div><div className="home-mini-s">Claude 기반 배치</div></div>
+          <div className="home-mini-ico" style={{background:'#1A2E55'}}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <ellipse cx="12" cy="5" rx="9" ry="3"/>
+              <path d="M21 12c0 1.657-4.03 3-9 3S3 13.657 3 12"/>
+              <path d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/>
+            </svg>
+          </div>
+          <div>
+            <div className="home-mini-t">입결 DB 현황</div>
+            <div className="home-mini-s">교과 9,892건 · 종합 6,237건</div>
+          </div>
         </div>
       </div>
     </div>
