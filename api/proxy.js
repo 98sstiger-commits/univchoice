@@ -1,4 +1,4 @@
-// UniChoice AI 분석 엔진 v6 — PDF 텍스트 추출 방식 (base64 제거)
+// UniChoice AI 분석 엔진 v7 — 응답 크기 최소화
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic = require('@anthropic-ai/sdk');
 
@@ -151,7 +151,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
         .not('grade70', 'is', null)
         .neq('grade_quality', 'placeholder')
         .order('grade70', { ascending: true })
-        .limit(120);
+        .limit(40);
       if (error) console.error('Supabase error:', error.message);
       admissionData = data || [];
     } catch(e) { console.error('Supabase 오류:', e.message); }
@@ -168,7 +168,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
         .from('uc_gyogwa_2027')
         .select('region,university,program_name,major,method,suneung_yn,suneung_min,subject_range')
         .or(orCond2)
-        .limit(100);
+        .limit(40);
       (data || []).forEach(s => {
         const key = `${s.university}|${s.program_name}`;
         suneungMap[key] = {
@@ -194,13 +194,13 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
             .not('grade70', 'is', null)
             .neq('grade_quality', 'placeholder')
             .order('grade70', { ascending: true })
-            .limit(80);
+            .limit(30);
           wishData = wData || [];
           const { data: gData } = await supabase
             .from('uc_gyogwa_2027')
             .select('region,university,program_name,major,method,suneung_yn,suneung_min,subject_range')
             .or(wishOr)
-            .limit(60);
+            .limit(30);
           (gData || []).forEach(s => {
             const key = `${s.university}|${s.program_name}`;
             if (!suneungMap[key]) {
@@ -233,7 +233,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
       };
     }
 
-    const dbRows = admissionData.slice(0, 60).map(r => {
+    const dbRows = admissionData.slice(0, 20).map(r => {
       const h = parseHistory(r);
       // 수능최저 룩업
       const sKey = `${r.university}|${r.program}`;
@@ -373,7 +373,7 @@ JSON 객체만 응답 (마크다운·설명 없이):
 
     const cardMsg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 8192,
+      max_tokens: 2000,
       messages: [{ role: 'user', content: cardPrompt }],
     });
 
@@ -409,8 +409,8 @@ JSON 객체만 응답 (마크다운·설명 없이):
 
     return res.status(200).json({
       student: { name, school, major, analysis, strategy: strategyDesc },
-      wishCards,
-      cards: cards.slice(0, totalCards),
+      wishCards: wishCards.slice(0, 6),
+      cards: cards.slice(0, Math.min(totalCards, 7)),
     });
 
   } catch (err) {
