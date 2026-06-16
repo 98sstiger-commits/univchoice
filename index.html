@@ -78,7 +78,7 @@
     .home-mini-s{font-size:10px;color:var(--g400)}
 
     /* ══ HEADER ══ */
-    .hdr{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+    .hdr{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:center;padding:0 22px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
     .hdr-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
     .hdr-badge{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.5px}
     .hdr-title{color:#fff;font-size:16px;font-weight:800;letter-spacing:-.5px}
@@ -381,8 +381,9 @@ function Header({ onHome }) {
           <div className="hdr-title">UniChoice</div>
           <div className="hdr-sub">AI 수시 배치 분석</div>
         </div>
+        <span style={{width:1,height:20,background:'rgba(255,255,255,.18)',display:'inline-block',margin:'0 6px'}} />
+        <span className="hdr-year">2027학년도</span>
       </div>
-      <span className="hdr-year">2027학년도</span>
     </header>
   );
 }
