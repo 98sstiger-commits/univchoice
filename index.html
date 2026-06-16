@@ -9,6 +9,12 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
   <style>
+    /* 접근성 툴바 완전 제거 */
+    [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
+    [id*="ada"],[class*="ada"],[id*="toolbar"],[class*="a11y"],
+    div[style*="position: fixed"][style*="right: 0"],
+    div[style*="position:fixed"][style*="right:0"]{display:none!important;visibility:hidden!important}
+
     :root {
       --navy:      #1A2E55;
       --navy-mid:  #2D4A80;
@@ -108,8 +114,8 @@
     .field-label{display:flex;align-items:center;gap:4px;margin-bottom:7px;font-size:13px;font-weight:700;color:var(--g700)}
     .required{color:var(--red)}
     .f-hint{font-weight:400;font-size:11px;color:var(--g400)}
-    input[type="text"],input[type="password"]{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--g900);background:#fff;outline:none;transition:border-color .18s,box-shadow .18s;font-family:inherit;appearance:none;-webkit-appearance:none}
-    input[type="text"]:focus,input[type="password"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.13)}
+    input[type="text"]{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--g900);background:#fff;outline:none;transition:border-color .18s,box-shadow .18s;font-family:inherit;appearance:none;-webkit-appearance:none}
+    input[type="text"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.13)}
     input::placeholder{color:var(--g300)}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     textarea{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g900);background:#fff;outline:none;transition:border-color .18s,box-shadow .18s;font-family:inherit;resize:vertical;min-height:200px;line-height:1.65;appearance:none;-webkit-appearance:none}
@@ -131,7 +137,7 @@
     .rec-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.1)}
 
     /* ══ UPLOAD ══ */
-    .upload-zone{border:2px dashed var(--g200);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;position:relative}
+    .upload-zone{border:2px dashed var(--g200);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;position:relative;display:block;width:100%}
     .upload-zone:hover{border-color:var(--blue);background:var(--blue-lt)}
     .upload-zone.has-file{border-color:var(--navy);background:var(--navy-lt);border-style:solid}
     .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -451,30 +457,13 @@ function OptionCard({ form, update }) {
   );
 }
 
-/* ── ApiKeyCard ── */
-function ApiKeyCard({ apiKey, setApiKey }) {
-  const [show,setShow]=useState(false);
-  return (
-    <div className="card">
-      <SecHead icon="🔑" title="Claude API 키" sub="AI 분석에 필요 · 브라우저 로컬 저장"/>
-      <div className="field">
-        <div className="field-label">Anthropic API Key <span className="required">*</span></div>
-        <div style={{position:'relative'}}>
-          <input type={show?'text':'password'} placeholder="sk-ant-api03-..." value={apiKey} onChange={e=>setApiKey(e.target.value)} style={{paddingRight:48}}/>
-          <button type="button" onClick={()=>setShow(s=>!s)} style={{position:'absolute',right:10,top:'50%',transform:'translateY(-50%)',background:'none',border:'none',cursor:'pointer',fontSize:16,color:'var(--g400)',lineHeight:1}}>{show?'🙈':'👁️'}</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 /* ── SubmitBar ── */
 function SubmitBar({ onClick, valid }) {
   return (
     <div className="submit-bar">
       <div className="submit-inner">
         <button className="submit-btn" onClick={onClick} disabled={!valid} type="button">
-          {valid?'🤖  AI 분석 시작하기 →':'이름·학교·학과·API 키를 모두 입력해주세요'}
+          {valid?'🤖  AI 분석 시작하기 →':'이름·학교·학과를 모두 입력해주세요'}
         </button>
         {valid&&<div className="submit-hint">분석까지 약 20~30초 소요됩니다</div>}
       </div>
@@ -587,14 +576,12 @@ async function exportToWord(result, form) {
   const tx=(text,bold=false)=>new Paragraph({children:[new TextRun({text:String(text||''),bold,size:bold?26:22})]});
   const h1=(text)=>new Paragraph({text,heading:HeadingLevel.HEADING_1,alignment:AlignmentType.CENTER});
   const h2=(text)=>new Paragraph({text,heading:HeadingLevel.HEADING_2});
-
   const children=[
     h1('필탑 UniChoice 수시 배치 분석 리포트'),
     tx(`분석일: ${new Date().toLocaleDateString('ko-KR')}`),
     br(),h2('학생 정보'),
     tx(`이름: ${form.name}`),tx(`학교: ${form.school}`),tx(`희망학과: ${form.major}`),br(),
   ];
-
   if(result.student?.analysis){
     const a=result.student.analysis;
     children.push(
@@ -605,7 +592,6 @@ async function exportToWord(result, form) {
       tx(`종합경쟁력: ${a.overallCompetitiveness||'-'}`),br(),
     );
   }
-
   children.push(h2('배치 후보 10개'));
   (result.cards||[]).forEach((card,i)=>{
     const cut=(card.cutlines||[]).map(c=>`${c.year}학년도 ${c.value}등급`).join(' / ');
@@ -620,7 +606,6 @@ async function exportToWord(result, form) {
       tx(`AI 리포트: ${card.aiReport||''}`),
     );
   });
-
   const doc=new Document({sections:[{properties:{},children}]});
   const blob=await Packer.toBlob(doc);
   const url=URL.createObjectURL(blob);
@@ -661,26 +646,23 @@ function ResultScreen({ result, form, onHome }) {
 function App() {
   const [screen,setScreen]=useState('home');
   const [form,setForm]=useState({name:'',school:'',major:'',record:'',recordFile:null,recordFiles:[],hasEssay:false});
-  const [apiKey,setApiKey]=useState(()=>localStorage.getItem('uc_api_key')||'');
   const [result,setResult]=useState(null);
   const [error,setError]=useState(null);
   const [submitted,setSubmitted]=useState(false);
 
   const update=useCallback((k,v)=>setForm(p=>({...p,[k]:v})),[]);
-  useEffect(()=>{localStorage.setItem('uc_api_key',apiKey);},[apiKey]);
 
   const handleAnalyze=async()=>{
     setSubmitted(true);
-    if(!isFormValid(form)||!apiKey.trim())return;
+    if(!isFormValid(form))return;
     setScreen('analyzing'); setError(null);
     try{
       const payload={name:form.name,school:form.school,major:form.major,record:form.record,hasEssay:form.hasEssay};
       if(form.recordFile){payload.recordFileBase64=await toB64(form.recordFile);payload.recordFileName=form.recordFile.name;}
       if(form.recordFiles.length){payload.recordFilesBase64=await Promise.all(form.recordFiles.map(f=>toB64(f)));payload.recordFileNames=form.recordFiles.map(f=>f.name);}
-
       const res=await fetch('/api/proxy',{
         method:'POST',
-        headers:{'Content-Type':'application/json','Anthropic-Key':apiKey},
+        headers:{'Content-Type':'application/json'},
         body:JSON.stringify(payload),
       });
       if(!res.ok){const t=await res.text().catch(()=>'');throw new Error(t||`서버 오류 ${res.status}`);}
@@ -719,9 +701,8 @@ function App() {
         <StudentCard form={form} update={update} submitted={submitted}/>
         <RecordCard  form={form} update={update}/>
         <OptionCard  form={form} update={update}/>
-        <ApiKeyCard  apiKey={apiKey} setApiKey={setApiKey}/>
       </main>
-      <SubmitBar onClick={handleAnalyze} valid={isFormValid(form)&&!!apiKey.trim()}/>
+      <SubmitBar onClick={handleAnalyze} valid={isFormValid(form)}/>
     </>
   );
 }
