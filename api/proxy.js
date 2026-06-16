@@ -143,8 +143,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
           'id', 'university', 'major', 'track', 'track_type',
           'program', 'field', 'domain', 'region',
           'grade50', 'grade70', 'grade_quality',
-          'recruit_2026', 'competition_2026', 'waitlist_2026',
-          'history'
+          'recruit_2026', 'competition_2026', 'waitlist_2026'
         ].join(','))
         .or(orCond)
         .in('track', tracks)
@@ -189,7 +188,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
           const wishOr = univNames.map(u => `university.ilike.%${u.replace(/학교$|대학교$|대$/, '')}%`).join(',');
           const { data: wData } = await supabase
             .from('uc_admission_results')
-            .select('id,university,major,track,track_type,program,field,domain,region,grade50,grade70,grade_quality,recruit_2026,competition_2026,waitlist_2026,history')
+            .select('id,university,major,track,track_type,program,field,domain,region,grade50,grade70,grade_quality,recruit_2026,competition_2026,waitlist_2026')
             .or(wishOr)
             .not('grade70', 'is', null)
             .neq('grade_quality', 'placeholder')
@@ -216,48 +215,23 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
     }
 
     // ── STEP 4: DB 데이터 → 프롬프트 요약 ──────────────────────
-    function parseHistory(r) {
-      let hist = {};
-      try {
-        hist = typeof r.history === 'string' ? JSON.parse(r.history) : (r.history || {});
-      } catch(e) {}
-      const yr = hist.years || {};
-      return {
-        cut25:  yr['2025']?.grade70  ?? '-',
-        cut24:  yr['2024']?.grade70  ?? '-',
-        rate25: yr['2025']?.competition ?? '-',
-        rate24: yr['2024']?.competition ?? '-',
-        wait25: yr['2025']?.waitlist ?? '-',
-        wait24: yr['2024']?.waitlist ?? '-',
-        recruit25: yr['2025']?.recruit ?? '-',
-      };
-    }
-
     const dbRows = admissionData.slice(0, 20).map(r => {
-      const h = parseHistory(r);
-      // 수능최저 룩업
       const sKey = `${r.university}|${r.program}`;
       const sInfo = suneungMap[sKey] || {};
       return [
         r.university,
         r.major,
-        r.domain || '-',          // 인문/자연/의학
-        r.track,                  // 교과/종합/논술
+        r.domain || '-',
+        r.track,
         r.region || '-',
-        r.program || '-',         // 전형명
-        r.recruit_2026 ?? '-',    // 2026 모집인원
+        r.program || '-',
+        r.recruit_2026 ?? '-',
         sInfo.admissionMethod || '-',
         sInfo.suneungMin || '-',
         sInfo.subjectScope || '-',
         `26컷:${r.grade70 ?? '-'}`,
-        `25컷:${h.cut25}`,
-        `24컷:${h.cut24}`,
         `26경쟁:${r.competition_2026 ?? '-'}`,
-        `25경쟁:${h.rate25}`,
-        `24경쟁:${h.rate24}`,
         `26충원:${r.waitlist_2026 ?? '-'}`,
-        `25충원:${h.wait25}`,
-        `24충원:${h.wait24}`,
       ].join('|');
     }).join('\n');
 
@@ -287,14 +261,13 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
           return true;
         }).slice(0, 6);
         const rowStr = rows.map(r => {
-          const h = parseHistory(r);
           const sInfo = suneungMap[`${r.university}|${r.program}`] || {};
           return [r.university, r.major, r.domain||'-', r.track, r.region||'-',
             r.program||'-', r.recruit_2026??'-',
             sInfo.admissionMethod||'-', sInfo.suneungMin||'-', sInfo.subjectScope||'-',
-            `26컷:${r.grade70??'-'}`, `25컷:${h.cut25}`, `24컷:${h.cut24}`,
-            `26경쟁:${r.competition_2026??'-'}`, `25경쟁:${h.rate25}`, `24경쟁:${h.rate24}`,
-            `26충원:${r.waitlist_2026??'-'}`, `25충원:${h.wait25}`, `24충원:${h.wait24}`,
+            `26컷:${r.grade70??'-'}`,
+            `26경쟁:${r.competition_2026??'-'}`,
+            `26충원:${r.waitlist_2026??'-'}`,
           ].join('|');
         }).join('\n');
         return `[희망${i+1}] ${uname||'?'} / ${dname||'학과미지정'} / ${pname||'전형미지정'}\n${rowStr || '(DB 없음 — 일반 지식 기반 분석)'}`;
@@ -348,7 +321,7 @@ ${strategyDesc}
 - 종합: 비교과 우수(상)이면 컷보다 0.3 불리해도 소신 가능
 - 논술: 논술 실력 가정 시 소신~적정
 
-[AI 추천 입결 DB — 대학|학과|계열|전형유형|지역|전형명|2026모집|전형방법|수능최저|반영교과|컷/경쟁률/충원]
+[AI 추천 입결 DB — 대학|학과|계열|전형유형|지역|전형명|2026모집|전형방법|수능최저|반영교과|26컷|26경쟁률|26충원]
 ${dbRows || '(DB 데이터 없음 — 일반 지식 기반 추천)'}
 
 [레포트 작성 규칙]

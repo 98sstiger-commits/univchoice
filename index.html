@@ -3,6 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <!-- UniChoice v8 2026-06-16 -->
   <title>UniChoice | 필탑</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -1077,9 +1081,12 @@ function App() {
         wishes: validWishes.length ? validWishes : null,
       };
       const payloadJson = JSON.stringify(payload);
-      console.log('[UniChoice] payload keys:', Object.keys(payload));
-      console.log('[UniChoice] payload size:', payloadJson.length, 'bytes (', (payloadJson.length / 1024).toFixed(1), 'KB )');
-      console.log('[UniChoice] record length:', (payload.record || '').length, '자');
+      console.log('[UniChoice v8] payload keys:', Object.keys(payload));
+      console.log('[UniChoice v8] payload size:', payloadJson.length, 'bytes (', (payloadJson.length / 1024).toFixed(1), 'KB )');
+      console.log('[UniChoice v8] record length:', (payload.record || '').length, '자');
+      if (payloadJson.length > 100000) {
+        throw new Error(`전송 데이터 초과 (${(payloadJson.length/1024).toFixed(0)}KB). 생기부 텍스트를 줄여주세요.`);
+      }
       const res = await fetch('/api/proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
