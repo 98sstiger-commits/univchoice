@@ -131,7 +131,7 @@ ${dbSummary || '(DB 데이터 없음 - 일반 추천)'}
 - 반드시 희망학과(${major}) 관련 학과로만 구성
 
 JSON 배열만 응답(다른 텍스트 없이):
-[{"university":"대학명","department":"학과명","admissionType":"학생부교과|학생부종합|논술","possibility":"위험|소신|적정|안정","cutlines":[{"year":2026,"value":숫자},{"year":2025,"value":숫자},{"year":2024,"value":숫자}],"competitionRate":숫자,"refundRate":숫자,"suneungMin":"없음 또는 조건","convertedScore":null,"aiReport":"추천이유 2~3문장"}]`;
+[{"university":"대학명","department":"학과명","region":"서울|경기|인천 등 지역","programName":"전형명(예:가천바람개비,학교추천전형)","admissionType":"학생부교과|학생부종합|논술","possibility":"위험|소신|적정|안정","recruitChange":"▲3 또는 ▼2 또는 -","essayDate":"논술전형일 경우 날짜(예:2025.11.15) 없으면 null","cutlines":[{"year":2026,"value":숫자,"rate":경쟁률숫자,"waitlist":충원숫자},{"year":2025,"value":숫자,"rate":경쟁률숫자,"waitlist":충원숫자},{"year":2024,"value":숫자,"rate":경쟁률숫자,"waitlist":충원숫자}],"suneungMin":"없음 또는 조건","convertedScore":null,"aiReport":"해당 전형에 반영되는 학생의 내신은 XX등급입니다. 3개년 입결 추이와 경쟁률, 비교과 강점을 근거로 2~3문장 분석."}]`;
 
     const cardMsg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
