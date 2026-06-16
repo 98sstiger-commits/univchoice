@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>UniChoice | 필탑</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
@@ -16,205 +15,231 @@
     [id*="ada"],[class*="ada"],[class*="a11y"]{display:none!important;visibility:hidden!important}
 
     :root {
-      --navy:#1A2E55; --navy-mid:#2D4A80; --navy-lt:#EEF2F9;
-      --blue:#4A90D9; --blue-lt:#EBF3FC;
-      --green:#059669; --green-bg:#D1FAE5;
-      --orange:#D97706; --orange-bg:#FEF3C7;
-      --red:#DC2626; --red-bg:#FEE2E2;
-      --blue2:#2563EB; --blue2-bg:#DBEAFE;
-      --g50:#F9FAFB; --g100:#F3F4F6; --g200:#E5E7EB;
-      --g300:#D1D5DB; --g400:#9CA3AF; --g500:#6B7280;
-      --g700:#374151; --g900:#111827;
+      --navy:#1A2E55;
+      --navy-mid:#2D4A80;
+      --navy-lt:#EEF2F9;
+      --blue:#4A90D9;
+      --blue-lt:#EBF3FC;
+      --green:#047857;
+      --green-bg:#D1FAE5;
+      --orange:#B45309;
+      --orange-bg:#FEF3C7;
+      --red:#B91C1C;
+      --red-bg:#FEE2E2;
+      --purple:#6D28D9;
+      --purple-bg:#EDE9FE;
+      --g50:#F9FAFB;
+      --g100:#F3F4F6;
+      --g200:#E5E7EB;
+      --g300:#D1D5DB;
+      --g400:#9CA3AF;
+      --g500:#6B7280;
+      --g700:#374151;
+      --g900:#111827;
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#F7F7F5;color:var(--g900);min-height:100vh;-webkit-font-smoothing:antialiased}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#F4F5F7;color:var(--g900);min-height:100vh;-webkit-font-smoothing:antialiased}
 
     /* ══ HOME ══ */
-    .home-wrap{max-width:520px;margin:0 auto;padding:48px 18px 60px}
-    .home-top{text-align:center;margin-bottom:28px}
-    .home-logo-row{display:inline-flex;align-items:center;gap:10px;margin-bottom:6px}
-    .home-logo-icon{width:38px;height:38px;background:var(--navy);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px}
-    .home-logo-name{font-size:24px;font-weight:800;color:var(--g900);letter-spacing:-.8px}
-    .home-logo-sub{font-size:13px;color:var(--g400)}
-    .home-divider{height:1px;background:var(--g200);margin-bottom:24px}
+    .home-wrap{max-width:520px;margin:0 auto;padding:48px 20px 60px}
+    .home-top{text-align:center;margin-bottom:32px}
+    .home-wordmark{font-size:28px;font-weight:800;color:var(--g900);letter-spacing:-1px;margin-bottom:4px}
+    .home-wordmark span{color:var(--navy)}
+    .home-sub{font-size:13px;color:var(--g400);letter-spacing:.2px}
+    .home-divider{height:1px;background:var(--g200);margin-bottom:28px}
     .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
-    .mode-card{border-radius:18px;padding:24px 20px 20px;min-height:340px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
-    .mode-card--s{background:var(--navy)}
+    .mode-card{border-radius:16px;padding:26px 22px 22px;min-height:320px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+    .mode-card--s{background:var(--navy);cursor:pointer}
     .mode-card--j{background:#fff;border:1px solid var(--g200)}
-    .mc-eyebrow{display:flex;align-items:center;gap:6px;margin-bottom:20px}
-    .mc-dot{width:7px;height:7px;border-radius:50%}
-    .mc-dot--active{background:#4CAF82}
-    .mc-dot--inactive{background:var(--g300)}
-    .mc-eyebrow-txt{font-size:11px;font-weight:600}
-    .mode-card--s .mc-eyebrow-txt{color:rgba(255,255,255,.6)}
-    .mode-card--j .mc-eyebrow-txt{color:var(--g400)}
-    .mc-title{font-size:32px;font-weight:700;line-height:1.1;letter-spacing:-1.5px;margin-bottom:10px}
+    .mc-label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:18px}
+    .mode-card--s .mc-label{color:rgba(255,255,255,.45)}
+    .mode-card--j .mc-label{color:var(--g300)}
+    .mc-title{font-size:30px;font-weight:800;line-height:1.1;letter-spacing:-1.5px;margin-bottom:10px}
     .mode-card--s .mc-title{color:#fff}
-    .mode-card--j .mc-title{color:var(--g900)}
-    .mc-desc{font-size:12px;line-height:1.6;margin-bottom:18px}
-    .mode-card--s .mc-desc{color:rgba(255,255,255,.55)}
-    .mode-card--j .mc-desc{color:var(--g400)}
-    .mc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:22px}
-    .mc-tag{font-size:10px;font-weight:600;padding:4px 9px;border-radius:8px}
-    .mode-card--s .mc-tag{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8)}
-    .mode-card--j .mc-tag{background:var(--g100);color:var(--g400)}
-    .mc-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px;border-radius:10px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s}
-    .mc-btn:hover{opacity:.88}
-    .mc-btn--start{background:rgba(255,255,255,.13);color:rgba(255,255,255,.9)}
-    .mc-btn--soon{background:var(--g100);color:var(--g400);cursor:default;justify-content:center}
-    .mc-num{position:absolute;bottom:-10px;right:8px;font-size:80px;font-weight:700;line-height:1;letter-spacing:-4px;pointer-events:none}
+    .mode-card--j .mc-title{color:var(--g300)}
+    .mc-desc{font-size:12px;line-height:1.65;margin-bottom:20px}
+    .mode-card--s .mc-desc{color:rgba(255,255,255,.5)}
+    .mode-card--j .mc-desc{color:var(--g300)}
+    .mc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:24px}
+    .mc-tag{font-size:10px;font-weight:600;padding:3px 9px;border-radius:6px;letter-spacing:.2px}
+    .mode-card--s .mc-tag{background:rgba(255,255,255,.1);color:rgba(255,255,255,.7)}
+    .mode-card--j .mc-tag{background:var(--g100);color:var(--g300)}
+    .mc-btn{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px;border-radius:8px;font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;border:none;transition:opacity .15s;letter-spacing:.1px}
+    .mc-btn:hover{opacity:.85}
+    .mc-btn--start{background:rgba(255,255,255,.12);color:rgba(255,255,255,.9)}
+    .mc-btn--soon{background:var(--g100);color:var(--g300);cursor:default;justify-content:center}
+    .mc-num{position:absolute;bottom:-14px;right:10px;font-size:90px;font-weight:800;line-height:1;letter-spacing:-4px;pointer-events:none}
     .mode-card--s .mc-num{color:rgba(255,255,255,.04)}
     .mode-card--j .mc-num{color:rgba(0,0,0,.04)}
     .home-minis{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-    .home-mini{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:13px 14px;display:flex;align-items:center;gap:10px;cursor:pointer;transition:border-color .15s}
-    .home-mini:hover{border-color:var(--g300)}
-    .home-mini-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
-    .home-mini-t{font-size:12px;font-weight:600;color:var(--g900);margin-bottom:2px}
+    .home-mini{background:#fff;border:1px solid var(--g200);border-radius:12px;padding:14px 16px;display:flex;align-items:center;gap:10px}
+    .home-mini-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;font-weight:700;color:#fff}
+    .home-mini-t{font-size:12px;font-weight:600;color:var(--g700);margin-bottom:2px}
     .home-mini-s{font-size:10px;color:var(--g400)}
 
     /* ══ HEADER ══ */
-    .hdr{background:var(--navy);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 20px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+    .hdr{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
     .hdr-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
-    .hdr-badge{background:var(--blue);color:#fff;font-size:12px;font-weight:800;padding:4px 10px;border-radius:7px}
-    .hdr-title{color:#fff;font-size:16px;font-weight:700;letter-spacing:-.3px}
-    .hdr-sub{color:rgba(255,255,255,.5);font-size:11px;margin-top:1px}
-    .hdr-year{color:rgba(255,255,255,.4);font-size:12px}
+    .hdr-badge{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.5px}
+    .hdr-title{color:#fff;font-size:16px;font-weight:800;letter-spacing:-.5px}
+    .hdr-sub{color:rgba(255,255,255,.4);font-size:10px;letter-spacing:.3px;margin-top:1px}
+    .hdr-year{color:rgba(255,255,255,.35);font-size:12px;font-weight:600;letter-spacing:.5px}
 
     /* ══ STEPS ══ */
-    .steps-wrap{background:#fff;border-bottom:1px solid var(--g200);padding:14px 20px}
+    .steps-wrap{background:#fff;border-bottom:1px solid var(--g200);padding:13px 22px}
     .steps{max-width:620px;margin:0 auto;display:flex;align-items:center}
     .step{display:flex;align-items:center;gap:8px}
-    .step-num{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+    .step-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
     .step-num.active{background:var(--navy);color:#fff}
     .step-num.done{background:var(--green);color:#fff}
-    .step-num.pending{background:var(--g200);color:var(--g500)}
-    .step-lbl{font-size:12px;color:var(--g500);white-space:nowrap}
+    .step-num.pending{background:var(--g200);color:var(--g400)}
+    .step-lbl{font-size:12px;color:var(--g400);white-space:nowrap}
     .step-lbl.active{color:var(--navy);font-weight:700}
-    .step-line{flex:1;height:2px;background:var(--g200);margin:0 8px}
+    .step-line{flex:1;height:1px;background:var(--g200);margin:0 8px}
 
     /* ══ FORM ══ */
-    .main{max-width:640px;margin:0 auto;padding:20px 14px 110px}
-    .error-box{background:var(--red-bg);border:1px solid #FECACA;border-radius:10px;padding:12px 16px;font-size:13px;color:var(--red);margin-bottom:14px}
-    .intro{background:linear-gradient(135deg,var(--navy) 0%,#2D4A80 100%);border-radius:16px;padding:22px 22px 20px;margin-bottom:16px;color:#fff}
-    .intro h2{font-size:17px;font-weight:800;margin-bottom:6px}
-    .intro p{font-size:12px;color:rgba(255,255,255,.72);line-height:1.6;margin-bottom:16px}
-    .intro-steps{display:flex}
-    .intro-step{flex:1;display:flex;align-items:center;gap:6px}
-    .intro-step-icon{width:30px;height:30px;background:rgba(255,255,255,.12);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-    .intro-step-text{font-size:11px;color:rgba(255,255,255,.75);line-height:1.4}
-    .intro-step-text strong{display:block;color:#fff;font-size:12px}
-    .intro-arrow{color:rgba(255,255,255,.3);font-size:12px;margin:0 6px}
-    .card{background:#fff;border-radius:16px;padding:22px 20px;margin-bottom:14px;border:1px solid var(--g100);box-shadow:0 1px 4px rgba(0,0,0,.04)}
+    .main{max-width:640px;margin:0 auto;padding:22px 16px 110px}
+    .error-box{background:var(--red-bg);border:1px solid #FECACA;border-radius:10px;padding:12px 16px;font-size:13px;color:var(--red);margin-bottom:16px}
+    .intro{background:var(--navy);border-radius:14px;padding:22px 22px 20px;margin-bottom:16px;color:#fff}
+    .intro h2{font-size:16px;font-weight:800;margin-bottom:6px;letter-spacing:-.3px}
+    .intro p{font-size:12px;color:rgba(255,255,255,.6);line-height:1.65;margin-bottom:16px}
+    .intro-steps{display:flex;gap:0}
+    .intro-step{flex:1;display:flex;align-items:center;gap:8px}
+    .intro-step-icon{width:28px;height:28px;background:rgba(255,255,255,.1);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;font-weight:700;color:rgba(255,255,255,.7)}
+    .intro-step-text{font-size:11px;color:rgba(255,255,255,.55);line-height:1.4}
+    .intro-step-text strong{display:block;color:rgba(255,255,255,.9);font-size:12px;margin-bottom:1px}
+    .intro-arrow{color:rgba(255,255,255,.2);font-size:14px;margin:0 4px}
+    .card{background:#fff;border-radius:14px;padding:22px 20px;margin-bottom:14px;border:1px solid var(--g100);box-shadow:0 1px 3px rgba(0,0,0,.04)}
     .sec-head{display:flex;align-items:center;gap:10px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--g100)}
-    .sec-icon{width:34px;height:34px;background:var(--navy-lt);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
-    .sec-title{font-size:15px;font-weight:800;color:var(--navy)}
-    .sec-sub{font-size:11px;color:var(--g500);margin-top:2px}
+    .sec-icon{width:32px;height:32px;background:var(--navy-lt);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--navy);flex-shrink:0}
+    .sec-title{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+    .sec-sub{font-size:11px;color:var(--g400);margin-top:2px}
     .field{margin-bottom:14px}
     .field:last-child{margin-bottom:0}
     .field-label{display:flex;align-items:center;gap:4px;margin-bottom:7px;font-size:13px;font-weight:700;color:var(--g700)}
     .required{color:var(--red)}
     .f-hint{font-weight:400;font-size:11px;color:var(--g400)}
-    input[type="text"]{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:14px;color:var(--g900);background:#fff;outline:none;transition:border-color .18s;font-family:inherit}
-    input[type="text"]:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.13)}
+    input[type="text"]{width:100%;padding:10px 13px;border:1.5px solid var(--g200);border-radius:8px;font-size:14px;color:var(--g900);background:#fff;outline:none;transition:border-color .15s;font-family:inherit}
+    input[type="text"]:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,46,85,.08)}
     input::placeholder{color:var(--g300)}
     .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    textarea{width:100%;padding:11px 14px;border:1.5px solid var(--g200);border-radius:10px;font-size:13px;color:var(--g900);background:#fff;outline:none;transition:border-color .18s;font-family:inherit;resize:vertical;min-height:200px;line-height:1.65}
-    textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(74,144,217,.13)}
+    textarea{width:100%;padding:11px 13px;border:1.5px solid var(--g200);border-radius:8px;font-size:13px;color:var(--g900);background:#fff;outline:none;transition:border-color .15s;font-family:inherit;resize:vertical;min-height:200px;line-height:1.65}
+    textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,46,85,.08)}
     textarea::placeholder{color:var(--g300)}
     .char-info{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
     .char-warn{font-size:11px;color:var(--orange)}
     .char-cnt{font-size:11px;color:var(--g400)}
     .char-ok{font-size:11px;color:var(--green);font-weight:600}
-    .ai-box{background:linear-gradient(135deg,#EEF2F9 0%,#E8F0FD 100%);border:1px solid rgba(26,46,85,.1);border-radius:12px;padding:14px 16px;display:flex;gap:13px;align-items:center;margin-bottom:14px}
-    .ai-box-icon{width:40px;height:40px;background:var(--navy);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-    .ai-box-text h4{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:3px}
-    .ai-box-text p{font-size:11px;color:var(--g500);line-height:1.5}
-    .rec-tabs{display:flex;gap:4px;background:var(--g100);border-radius:10px;padding:4px;margin-bottom:16px}
-    .rec-tab{flex:1;padding:8px 6px;border:none;border-radius:7px;background:transparent;font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
-    .rec-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 4px rgba(0,0,0,.1)}
-    .upload-zone{border:2px dashed var(--g200);border-radius:12px;padding:36px 20px;text-align:center;cursor:pointer;transition:border-color .18s,background .18s;position:relative;display:block;width:100%}
-    .upload-zone:hover{border-color:var(--blue);background:var(--blue-lt)}
+    .notice-box{background:var(--navy-lt);border:1px solid rgba(26,46,85,.1);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+    .notice-box-icon{width:20px;height:20px;background:var(--navy);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .notice-box-icon svg{width:11px;height:11px;fill:#fff}
+    .notice-box-text{font-size:12px;color:var(--navy-mid);line-height:1.6}
+    .notice-box-text strong{font-weight:700;color:var(--navy)}
+    .rec-tabs{display:flex;gap:4px;background:var(--g100);border-radius:8px;padding:3px;margin-bottom:14px}
+    .rec-tab{flex:1;padding:8px 6px;border:none;border-radius:6px;background:transparent;font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+    .rec-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+    .upload-zone{border:1.5px dashed var(--g300);border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;display:block;width:100%}
+    .upload-zone:hover{border-color:var(--navy);background:var(--navy-lt)}
     .upload-zone.has-file{border-color:var(--navy);background:var(--navy-lt);border-style:solid}
     .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-    .upload-icon{font-size:32px;margin-bottom:10px;display:block}
     .upload-title{font-size:14px;font-weight:700;color:var(--g700);margin-bottom:5px}
     .upload-zone.has-file .upload-title{color:var(--navy)}
     .upload-desc{font-size:12px;color:var(--g400);line-height:1.5}
     .upload-zone.has-file .upload-desc{color:var(--navy-mid)}
-    .upload-hint{margin-top:12px;display:inline-block;background:var(--g100);border-radius:6px;padding:4px 12px;font-size:11px;color:var(--g500)}
+    .upload-hint{margin-top:10px;display:inline-block;background:var(--g100);border-radius:5px;padding:3px 10px;font-size:11px;color:var(--g400)}
     .upload-zone.has-file .upload-hint{background:rgba(26,46,85,.1);color:var(--navy)}
-    .chk-opt{display:flex;align-items:center;gap:14px;padding:16px;border:1.5px solid var(--g200);border-radius:12px;cursor:pointer;transition:all .15s;user-select:none}
-    .chk-opt:hover{border-color:var(--blue);background:var(--blue-lt)}
+    .chk-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--g200);border-radius:10px;cursor:pointer;transition:all .15s;user-select:none}
+    .chk-opt:hover{border-color:var(--navy-mid);background:var(--navy-lt)}
     .chk-opt.on{border-color:var(--navy);background:var(--navy-lt)}
-    .chk-box{width:22px;height:22px;border-radius:7px;border:2px solid var(--g300);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
+    .chk-box{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--g300);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .15s}
     .chk-box.on{background:var(--navy);border-color:var(--navy)}
-    .chk-text h4{font-size:14px;font-weight:700;color:var(--g900)}
+    .chk-text h4{font-size:13px;font-weight:700;color:var(--g900)}
     .chk-text p{font-size:12px;color:var(--g500);margin-top:3px;line-height:1.4}
-    .submit-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:14px 16px;border-top:1px solid var(--g200);box-shadow:0 -4px 20px rgba(0,0,0,.09);z-index:200}
+    .submit-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:12px 16px;border-top:1px solid var(--g200);box-shadow:0 -4px 24px rgba(0,0,0,.08);z-index:200}
     .submit-inner{max-width:608px;margin:0 auto}
-    .submit-btn{display:block;width:100%;padding:15px;background:var(--navy);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:background .18s;font-family:inherit}
+    .submit-btn{display:block;width:100%;padding:14px;background:var(--navy);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:800;cursor:pointer;transition:background .15s;font-family:inherit;letter-spacing:.1px}
     .submit-btn:hover:not(:disabled){background:var(--navy-mid)}
     .submit-btn:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
     .submit-hint{text-align:center;font-size:11px;color:var(--g400);margin-top:6px}
     .field-err input,.field-err textarea{border-color:var(--red)!important}
     .err-msg{font-size:11px;color:var(--red);margin-top:4px}
+
+    /* ══ ANALYZING ══ */
     .analyzing-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;background:#fff}
-    .analyzing-inner{max-width:420px;padding:40px 24px;text-align:center;width:100%}
-    .analyzing-robot{font-size:56px;display:block;margin-bottom:24px;animation:pulse 2s infinite}
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
-    .analyzing-inner h2{font-size:22px;font-weight:900;color:var(--navy);margin-bottom:8px}
+    .analyzing-inner{max-width:400px;padding:40px 24px;text-align:center;width:100%}
+    .analyzing-spinner{width:52px;height:52px;border:3px solid var(--g200);border-top-color:var(--navy);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 28px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .analyzing-inner h2{font-size:20px;font-weight:800;color:var(--navy);margin-bottom:8px;letter-spacing:-.3px}
     .analyzing-inner>p{font-size:13px;color:var(--g400);margin-bottom:32px}
     .a-steps{text-align:left}
     .a-step{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--g100)}
     .a-step:last-child{border-bottom:none}
-    .a-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0}
+    .a-dot{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
     .a-dot.done{background:var(--green-bg);color:var(--green)}
-    .a-dot.active{background:var(--navy);color:#fff;animation:blink .8s infinite}
+    .a-dot.active{background:var(--navy);color:#fff;animation:blink .9s infinite}
     .a-dot.pending{background:var(--g100);color:var(--g300)}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:.5}}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
     .a-label{font-size:13px;font-weight:600}
     .a-label.done{color:var(--green)}.a-label.active{color:var(--navy)}.a-label.pending{color:var(--g300)}
-    .result-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .result-top h2{font-size:17px;font-weight:800;color:var(--navy)}
-    .export-btn{padding:9px 16px;background:var(--navy);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+
+    /* ══ RESULT ══ */
+    .result-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+    .result-hd h2{font-size:17px;font-weight:800;color:var(--navy);letter-spacing:-.3px}
+    .export-btn{padding:8px 16px;background:var(--navy);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.1px;transition:background .15s}
+    .export-btn:hover:not(:disabled){background:var(--navy-mid)}
     .export-btn:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
-    .analysis-box{background:linear-gradient(135deg,var(--navy-lt) 0%,#E8F0FD 100%);border:1px solid rgba(26,46,85,.1);border-radius:16px;padding:18px 20px;margin-bottom:14px}
+    .result-strategy{font-size:11px;color:var(--g500);margin-bottom:16px;line-height:1.5}
+
+    /* 분석 박스 */
+    .analysis-box{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px 20px;margin-bottom:14px}
     .ab-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .ab-title{font-size:14px;font-weight:800;color:var(--navy)}
-    .comp-badge{font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px}
-    .ab-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-    .ab-metric{background:#fff;border-radius:10px;padding:10px 12px;text-align:center}
-    .ab-metric-lbl{font-size:10px;color:var(--g400);margin-bottom:4px}
-    .ab-metric-val{font-size:14px;font-weight:800;color:var(--navy)}
-    .result-card{background:#fff;border-radius:16px;margin-bottom:12px;border:1px solid var(--g200);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
-    .rc-bar{height:4px}
+    .ab-title{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+    .comp-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
+    .ab-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+    .ab-metric{background:var(--g50);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--g100)}
+    .ab-metric-lbl{font-size:10px;color:var(--g400);margin-bottom:4px;letter-spacing:.2px}
+    .ab-metric-val{font-size:13px;font-weight:800;color:var(--navy)}
+
+    /* 결과 카드 */
+    .result-card{background:#fff;border-radius:14px;margin-bottom:12px;border:1px solid var(--g200);overflow:hidden}
+    .rc-bar{height:3px}
     .rc-body{padding:18px 20px}
-    .rc-hd{display:flex;align-items:center;gap:8px;margin-bottom:10px}
-    .rc-rank{width:24px;height:24px;background:var(--navy);color:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
-    .rc-poss{font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
-    .rc-type{font-size:11px;font-weight:700;margin-left:auto}
-    .rc-univ{font-size:17px;font-weight:900;color:var(--g900);letter-spacing:-.3px;margin-bottom:2px}
-    .rc-dept{font-size:13px;color:var(--g500);margin-bottom:4px}
-    .rc-program{font-size:11px;color:var(--g400);margin-bottom:8px}
-    .rc-region{display:inline-block;font-size:10px;font-weight:600;background:var(--g100);color:var(--g500);padding:2px 8px;border-radius:5px;margin-right:5px}
-    .rc-essay-date{display:inline-block;font-size:10px;font-weight:600;background:#F3E8FF;color:#7C3AED;padding:2px 8px;border-radius:5px}
-    .rc-converted{display:inline-block;background:var(--navy-lt);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:12px}
-    .rc-cuts{display:flex;gap:6px;margin-bottom:10px}
-    .rc-cut{background:var(--g50);border-radius:8px;padding:6px 10px;text-align:center;flex:1}
-    .rc-cut-yr{font-size:9px;color:var(--g400);display:block;margin-bottom:2px}
-    .rc-cut-val{font-size:13px;font-weight:800;color:var(--navy);display:block}
-    .rc-meta{display:flex;gap:14px;margin-bottom:10px}
-    .rc-meta span{font-size:12px;color:var(--g500)}
-    .rc-meta strong{color:var(--g900);font-weight:700}
-    .rc-suneung{display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;margin-bottom:10px}
+    /* 상단 배지 행 */
+    .rc-badges{display:flex;align-items:center;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+    .rc-poss{font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px;letter-spacing:.3px}
+    .rc-type{font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.2px;background:var(--navy-lt);color:var(--navy)}
+    .rc-region-badge{font-size:10px;font-weight:600;padding:2px 8px;border-radius:5px;background:var(--g100);color:var(--g500)}
+    .rc-essay-badge{font-size:10px;font-weight:700;padding:2px 9px;border-radius:5px;background:var(--purple-bg);color:var(--purple)}
+    .rc-rank{width:22px;height:22px;background:var(--navy);color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+    /* 대학·학과 */
+    .rc-univ{font-size:18px;font-weight:900;color:var(--g900);letter-spacing:-.5px;margin-bottom:2px}
+    .rc-dept-row{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+    .rc-category{font-size:11px;font-weight:600;color:var(--g400)}
+    .rc-dept{font-size:14px;font-weight:700;color:var(--g700)}
+    .rc-program{font-size:12px;color:var(--g400);margin-bottom:12px}
+    /* 3개년 테이블 */
+    .rc-table{width:100%;border-collapse:collapse;margin-bottom:10px;font-size:12px}
+    .rc-table th{background:var(--g50);color:var(--g500);font-weight:600;padding:6px 8px;text-align:center;border:1px solid var(--g100);font-size:11px;letter-spacing:.2px}
+    .rc-table td{padding:7px 8px;text-align:center;border:1px solid var(--g100);color:var(--g700);font-weight:600}
+    .rc-table td.cut{color:var(--navy);font-weight:800;font-size:13px}
+    .rc-table td.null{color:var(--g300);font-weight:400}
+    /* 메타 정보 행 */
+    .rc-meta-row{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+    .rc-meta-item{display:flex;align-items:center;gap:4px}
+    .rc-meta-label{font-size:10px;color:var(--g400);font-weight:600;letter-spacing:.3px}
+    .rc-meta-val{font-size:12px;color:var(--g700);font-weight:700}
+    .rc-suneung{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:5px;margin-bottom:10px}
     .rc-suneung.has{background:var(--orange-bg);color:var(--orange)}
     .rc-suneung.none{background:var(--green-bg);color:var(--green)}
-    .rc-report{font-size:12px;color:var(--g500);line-height:1.65;padding-top:10px;border-top:1px solid var(--g100)}
+    .rc-method{font-size:11px;color:var(--g500);margin-bottom:10px;line-height:1.5}
+    .rc-report{font-size:12px;color:var(--g600);line-height:1.7;padding-top:10px;border-top:1px solid var(--g100)}
+
     @media(max-width:500px){
       .mode-grid{grid-template-columns:1fr}
       .row2{grid-template-columns:1fr}
       .ab-metrics{grid-template-columns:1fr 1fr}
       .intro-arrow{display:none}
+      .rc-table{font-size:11px}
     }
   </style>
 </head>
@@ -222,16 +247,34 @@
 <div id="root"></div>
 <script type="text/babel">
 const { useState, useCallback, useEffect } = React;
-const POSS={'위험':{color:'#DC2626',bg:'#FEE2E2',bar:'#DC2626'},'소신':{color:'#D97706',bg:'#FEF3C7',bar:'#D97706'},'적정':{color:'#2563EB',bg:'#DBEAFE',bar:'#2563EB'},'안정':{color:'#059669',bg:'#D1FAE5',bar:'#059669'}};
-const TYPE_CLR={'학생부교과':'#1A2E55','학생부종합':'#2563EB','논술':'#7C3AED'};
-const STEPS=['생기부 텍스트 분석 중','내신 등급 자동 추출 중','전공적합성·활동 분석 중','입결 데이터 조회 중','교과·종합·논술 후보 선별 중','최종 배치 리포트 생성 중'];
-const isFormValid=f=>f.name.trim()&&f.school.trim()&&f.major.trim();
-async function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);})}
+
+const POSS = {
+  '위험': { color:'#B91C1C', bg:'#FEE2E2', bar:'#EF4444' },
+  '소신': { color:'#B45309', bg:'#FEF3C7', bar:'#F59E0B' },
+  '적정': { color:'#1D4ED8', bg:'#DBEAFE', bar:'#3B82F6' },
+  '안정': { color:'#047857', bg:'#D1FAE5', bar:'#10B981' },
+};
+const TYPE_STYLE = {
+  '학생부교과': { bg:'#EEF2F9', color:'#1A2E55' },
+  '학생부종합': { bg:'#DBEAFE', color:'#1D4ED8' },
+  '논술':       { bg:'#EDE9FE', color:'#6D28D9' },
+};
+const STEPS = [
+  '생기부 텍스트 분석 중',
+  '내신 등급 자동 추출 중',
+  '전공적합성·활동 분석 중',
+  '입결 데이터 조회 중',
+  '교과·종합·논술 후보 선별 중',
+  '최종 배치 리포트 생성 중',
+];
+
+const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
 async function extractPdfText(file) {
   try {
-    if (!window.pdfjsLib) { console.error('PDF.js 미로드'); return ''; }
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    if (!window.pdfjsLib) return '';
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
     const arrayBuffer = await file.arrayBuffer();
     const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
     let text = '';
@@ -240,35 +283,28 @@ async function extractPdfText(file) {
       const content = await page.getTextContent();
       text += content.items.map(item => item.str).join(' ') + '\n';
     }
-    const result = text.trim().slice(0, 4000);
-    console.log('PDF 추출 완료:', result.length, '자');
-    return result;
-  } catch(e) {
-    console.error('PDF 추출 오류:', e);
-    return '';
-  }
+    return text.trim().slice(0, 5000);
+  } catch(e) { console.error('PDF 추출 오류:', e); return ''; }
 }
 
 /* ── HomeScreen ── */
-function HomeScreen({onStart}){
-  return(
+function HomeScreen({ onStart }) {
+  return (
     <div className="home-wrap">
       <div className="home-top">
-        <div className="home-logo-row">
-          <div className="home-logo-icon"><i className="ti ti-building-community" style={{color:"#fff",fontSize:"20px"}}></i></div>
-          <span className="home-logo-name">UniChoice</span>
-        </div>
-        <div className="home-logo-sub">생기부 · 모의고사 기반 대입 배치분석</div>
+        <div className="home-wordmark">Uni<span>Choice</span></div>
+        <div className="home-sub">생기부 · 내신 기반 대입 수시 배치 분석</div>
       </div>
-      <div className="home-divider"/>
+      <div className="home-divider" />
       <div className="mode-grid">
-        <div className="mode-card mode-card--s" style={{cursor:'pointer'}} onClick={onStart}>
+        <div className="mode-card mode-card--s" onClick={onStart}>
           <div>
-            <div className="mc-eyebrow"><span className="mc-dot mc-dot--active"/><span className="mc-eyebrow-txt">수시 배치분석</span></div>
+            <div className="mc-label">Susi Analysis</div>
             <div className="mc-title">수시<br/>배치</div>
             <div className="mc-desc">생기부 분석부터<br/>전형별 카드 생성까지</div>
             <div className="mc-tags">
-              {['학생부종합','학생부교과','논술','카드 10개'].map(t=><span key={t} className="mc-tag">{t}</span>)}
+              {['학생부종합','학생부교과','논술','카드 6~7장'].map(t =>
+                <span key={t} className="mc-tag">{t}</span>)}
             </div>
           </div>
           <div className="mc-btn mc-btn--start"><span>배치 시작하기</span><span>→</span></div>
@@ -276,11 +312,12 @@ function HomeScreen({onStart}){
         </div>
         <div className="mode-card mode-card--j">
           <div>
-            <div className="mc-eyebrow"><span className="mc-dot mc-dot--inactive"/><span className="mc-eyebrow-txt">정시 배치분석</span></div>
+            <div className="mc-label">Jeongsi Analysis</div>
             <div className="mc-title">정시<br/>배치</div>
             <div className="mc-desc">수능 성적 기반<br/>가·나·다군 배치 분석</div>
             <div className="mc-tags">
-              {['가군','나군','다군','3장 카드'].map(t=><span key={t} className="mc-tag">{t}</span>)}
+              {['가군','나군','다군','3장 카드'].map(t =>
+                <span key={t} className="mc-tag">{t}</span>)}
             </div>
           </div>
           <div className="mc-btn mc-btn--soon">준비 중</div>
@@ -289,12 +326,12 @@ function HomeScreen({onStart}){
       </div>
       <div className="home-minis">
         <div className="home-mini">
-          <div className="home-mini-ico" style={{background:'#EEF2F9'}}>🕐</div>
-          <div><div className="home-mini-t">분석 이력</div><div className="home-mini-s">최근 상담 학생</div></div>
+          <div className="home-mini-ico" style={{ background:'#1A2E55' }}>DB</div>
+          <div><div className="home-mini-t">입결 데이터</div><div className="home-mini-s">2021–2026 대교협</div></div>
         </div>
         <div className="home-mini">
-          <div className="home-mini-ico" style={{background:'#E8F5EC'}}>🗄️</div>
-          <div><div className="home-mini-t">입결 DB</div><div className="home-mini-s">2021-2025 대교협</div></div>
+          <div className="home-mini-ico" style={{ background:'#047857' }}>AI</div>
+          <div><div className="home-mini-t">AI 자동 분석</div><div className="home-mini-s">Claude 기반 배치</div></div>
         </div>
       </div>
     </div>
@@ -302,12 +339,15 @@ function HomeScreen({onStart}){
 }
 
 /* ── Header ── */
-function Header({onHome}){
-  return(
+function Header({ onHome }) {
+  return (
     <header className="hdr">
       <div className="hdr-logo" onClick={onHome}>
-        <span className="hdr-badge">필탑</span>
-        <div><div className="hdr-title">UniChoice</div><div className="hdr-sub">AI 대입 배치 분석</div></div>
+        <span className="hdr-badge">PILTOP</span>
+        <div>
+          <div className="hdr-title">UniChoice</div>
+          <div className="hdr-sub">AI 수시 배치 분석</div>
+        </div>
       </div>
       <span className="hdr-year">2027학년도</span>
     </header>
@@ -315,289 +355,538 @@ function Header({onHome}){
 }
 
 /* ── StepProgress ── */
-function StepProgress({step}){
-  const labels=['정보 입력','AI 분석','배치 결과'];
-  return(
-    <div className="steps-wrap"><div className="steps">
-      {labels.map((lbl,i)=>{
-        const n=i+1,cls=n<step?'done':n===step?'active':'pending';
-        return(<React.Fragment key={i}>
-          <div className="step"><div className={`step-num ${cls}`}>{n<step?'✓':n}</div><span className={`step-lbl ${n===step?'active':''}`}>{lbl}</span></div>
-          {i<labels.length-1&&<div className="step-line"/>}
-        </React.Fragment>);
-      })}
-    </div></div>
-  );
-}
-
-function SecHead({icon,title,sub}){
-  return(<div className="sec-head"><div className="sec-icon">{icon}</div><div><div className="sec-title">{title}</div>{sub&&<div className="sec-sub">{sub}</div>}</div></div>);
-}
-
-function StudentCard({form,update,submitted}){
-  return(
-    <div className="card">
-      <SecHead icon="👤" title="학생 기본 정보" sub="이름·학교·희망학과"/>
-      <div className="row2" style={{marginBottom:14}}>
-        <div className={`field ${submitted&&!form.name.trim()?'field-err':''}`}>
-          <div className="field-label">이름 <span className="required">*</span></div>
-          <input type="text" placeholder="홍길동" value={form.name} onChange={e=>update('name',e.target.value)} maxLength={20}/>
-          {submitted&&!form.name.trim()&&<div className="err-msg">이름을 입력하세요</div>}
-        </div>
-        <div className={`field ${submitted&&!form.school.trim()?'field-err':''}`}>
-          <div className="field-label">학교명 <span className="required">*</span></div>
-          <input type="text" placeholder="○○고등학교" value={form.school} onChange={e=>update('school',e.target.value)} maxLength={30}/>
-          {submitted&&!form.school.trim()&&<div className="err-msg">학교명을 입력하세요</div>}
-        </div>
-      </div>
-      <div className={`field ${submitted&&!form.major.trim()?'field-err':''}`}>
-        <div className="field-label">희망 학과/계열 <span className="required">*</span><span className="f-hint">복수 가능</span></div>
-        <input type="text" placeholder="예: 컴퓨터공학과, 전자공학과 / 경영학과 / 의예과" value={form.major} onChange={e=>update('major',e.target.value)}/>
-        {submitted&&!form.major.trim()&&<div className="err-msg">희망 학과를 입력하세요</div>}
+function StepProgress({ step }) {
+  const labels = ['정보 입력', 'AI 분석', '배치 결과'];
+  return (
+    <div className="steps-wrap">
+      <div className="steps">
+        {labels.map((lbl, i) => {
+          const n = i + 1;
+          const cls = n < step ? 'done' : n === step ? 'active' : 'pending';
+          return (
+            <React.Fragment key={i}>
+              <div className="step">
+                <div className={`step-num ${cls}`}>{n < step ? '✓' : n}</div>
+                <span className={`step-lbl ${n === step ? 'active' : ''}`}>{lbl}</span>
+              </div>
+              {i < labels.length - 1 && <div className="step-line" />}
+            </React.Fragment>
+          );
+        })}
       </div>
     </div>
   );
 }
 
-const REC_TABS=[{key:'text',label:'텍스트 붙여넣기'},{key:'pdf',label:'PDF 업로드'},{key:'image',label:'이미지 업로드'}];
-function RecordCard({form,update}){
-  const [tab,setTab]=useState('text');
-  const [pdfFile,setPdfFile]=useState(null);
-  const [imgFiles,setImgFiles]=useState([]);
-  const len=form.record.length,isGood=len>=500,isWarn=len>0&&len<200;
-  return(
+/* ── Form Cards ── */
+function StudentCard({ form, update, submitted }) {
+  return (
     <div className="card">
-      <SecHead icon="📋" title="생활기록부" sub="AI가 내신·활동 자동 추출"/>
-      <div className="rec-tabs">
-        {REC_TABS.map(t=><button key={t.key} className={`rec-tab ${tab===t.key?'active':''}`} onClick={()=>setTab(t.key)} type="button">{t.label}</button>)}
+      <div className="sec-head">
+        <div className="sec-icon">01</div>
+        <div>
+          <div className="sec-title">학생 기본 정보</div>
+          <div className="sec-sub">이름 · 학교 · 희망학과 입력</div>
+        </div>
       </div>
-      {tab==='text'&&<>
-        <div className="ai-box"><div className="ai-box-icon">🤖</div><div className="ai-box-text"><h4>AI 자동 추출</h4><p>나이스·학교 포털에서 생기부 전문을 복사해 붙여넣으세요.<br/>내신 등급·전공적합성·학업성장성을 AI가 자동 분석합니다.</p></div></div>
+      <div className="row2" style={{ marginBottom: 14 }}>
+        <div className={`field ${submitted && !form.name.trim() ? 'field-err' : ''}`}>
+          <div className="field-label">이름 <span className="required">*</span></div>
+          <input type="text" placeholder="홍길동" value={form.name}
+            onChange={e => update('name', e.target.value)} maxLength={20} />
+          {submitted && !form.name.trim() && <div className="err-msg">이름을 입력하세요</div>}
+        </div>
+        <div className={`field ${submitted && !form.school.trim() ? 'field-err' : ''}`}>
+          <div className="field-label">학교명 <span className="required">*</span></div>
+          <input type="text" placeholder="○○고등학교" value={form.school}
+            onChange={e => update('school', e.target.value)} maxLength={30} />
+          {submitted && !form.school.trim() && <div className="err-msg">학교명을 입력하세요</div>}
+        </div>
+      </div>
+      <div className={`field ${submitted && !form.major.trim() ? 'field-err' : ''}`}>
+        <div className="field-label">희망 학과 / 계열 <span className="required">*</span>
+          <span className="f-hint">복수 입력 가능</span>
+        </div>
+        <input type="text"
+          placeholder="예: 사학과 / 경영학과, 경제학과 / 컴퓨터공학과"
+          value={form.major} onChange={e => update('major', e.target.value)} />
+        {submitted && !form.major.trim() && <div className="err-msg">희망 학과를 입력하세요</div>}
+      </div>
+    </div>
+  );
+}
+
+const REC_TABS = [
+  { key: 'text', label: '텍스트 붙여넣기' },
+  { key: 'pdf',  label: 'PDF 업로드' },
+  { key: 'image',label: '이미지 업로드' },
+];
+
+function RecordCard({ form, update }) {
+  const [tab, setTab] = useState('text');
+  const [pdfFile, setPdfFile] = useState(null);
+  const [imgFiles, setImgFiles] = useState([]);
+  const len = form.record.length;
+  const isGood = len >= 500;
+  const isWarn = len > 0 && len < 200;
+
+  return (
+    <div className="card">
+      <div className="sec-head">
+        <div className="sec-icon">02</div>
+        <div>
+          <div className="sec-title">생활기록부</div>
+          <div className="sec-sub">AI가 내신 · 비교과 자동 추출 및 분석</div>
+        </div>
+      </div>
+      <div className="notice-box">
+        <div className="notice-box-icon">
+          <svg viewBox="0 0 12 12"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM5.25 6h1.5v3h-1.5V6z"/></svg>
+        </div>
+        <div className="notice-box-text">
+          <strong>나이스 또는 학교 포털에서 생기부 전문 복사</strong> 후 붙여넣으세요.
+          내신 등급·비교과 활동을 AI가 자동 분석하여 배치 전략을 수립합니다.
+        </div>
+      </div>
+      <div className="rec-tabs">
+        {REC_TABS.map(t =>
+          <button key={t.key} className={`rec-tab ${tab === t.key ? 'active' : ''}`}
+            onClick={() => setTab(t.key)} type="button">{t.label}</button>)}
+      </div>
+
+      {tab === 'text' && (
         <div className="field">
-          <textarea placeholder={"[세부능력 및 특기사항]\n\n국어: ...\n수학: ...\n\n[창의적 체험활동]\n자율활동: ...\n동아리: ...\n\n[행동특성 및 종합의견]\n..."} value={form.record} onChange={e=>update('record',e.target.value)}/>
+          <textarea
+            placeholder={"[교과학습 발달상황]\n\n국어: ...\n수학: ...\n\n[세부능력 및 특기사항]\n...\n\n[창의적 체험활동]\n...\n\n[행동특성 및 종합의견]\n..."}
+            value={form.record} onChange={e => update('record', e.target.value)} />
           <div className="char-info">
-            {isWarn?<span className="char-warn">⚠ 500자 이상 입력 권장</span>:isGood?<span className="char-ok">✓ 분석에 충분합니다</span>:<span/>}
-            <span className={`char-cnt ${isGood?'char-ok':''}`}>{len.toLocaleString()}자</span>
+            {isWarn ? <span className="char-warn">500자 이상 입력 권장</span>
+              : isGood ? <span className="char-ok">분석에 충분합니다</span>
+              : <span />}
+            <span className={`char-cnt ${isGood ? 'char-ok' : ''}`}>{len.toLocaleString()}자</span>
           </div>
         </div>
-      </>}
-      {tab==='pdf'&&<>
-        <div className="ai-box"><div className="ai-box-icon">🤖</div><div className="ai-box-text"><h4>PDF 자동 분석</h4><p>나이스에서 내보낸 생기부 PDF를 업로드하면<br/>AI가 텍스트를 추출해 자동 분석합니다.</p></div></div>
-        <label className={`upload-zone ${pdfFile?'has-file':''}`}>
-          <input type="file" accept=".pdf" onChange={async e=>{const f=e.target.files[0];if(!f)return;setPdfFile(f);const txt=await extractPdfText(f);if(txt&&txt.trim().length>50){update('record',txt);}}}/>
-          <span className="upload-icon">{pdfFile?'✅':'📄'}</span>
-          <div className="upload-title">{pdfFile?pdfFile.name:'PDF 파일을 클릭하거나 드래그'}</div>
-          <div className="upload-desc">{pdfFile?`${(pdfFile.size/1024).toFixed(0)} KB · 업로드 완료`:'나이스에서 출력한 생기부 PDF'}</div>
+      )}
+
+      {tab === 'pdf' && (
+        <label className={`upload-zone ${pdfFile ? 'has-file' : ''}`}>
+          <input type="file" accept=".pdf" onChange={async e => {
+            const f = e.target.files[0]; if (!f) return;
+            setPdfFile(f);
+            const txt = await extractPdfText(f);
+            if (txt && txt.trim().length > 50) update('record', txt);
+          }} />
+          <div className="upload-title">{pdfFile ? pdfFile.name : 'PDF 파일을 클릭하거나 드래그'}</div>
+          <div className="upload-desc">{pdfFile ? `${(pdfFile.size / 1024).toFixed(0)} KB · 업로드 완료` : '나이스에서 출력한 생기부 PDF'}</div>
           <span className="upload-hint">.pdf 파일만 지원</span>
         </label>
-      </>}
-      {tab==='image'&&<>
-        <div className="ai-box"><div className="ai-box-icon">🤖</div><div className="ai-box-text"><h4>이미지 OCR 분석</h4><p>생기부를 촬영하거나 스캔한 이미지를 업로드하세요.<br/>AI OCR로 텍스트를 추출해 자동 분석합니다.</p></div></div>
-        <label className={`upload-zone ${imgFiles.length?'has-file':''}`}>
-          <input type="file" accept="image/jpeg,image/png" multiple onChange={e=>{const fs=Array.from(e.target.files);if(fs.length){setImgFiles(fs);update('recordFiles',fs);}}}/>
-          <span className="upload-icon">{imgFiles.length?'✅':'🖼️'}</span>
-          <div className="upload-title">{imgFiles.length?`${imgFiles.length}개 이미지 선택됨`:'이미지를 클릭하거나 드래그'}</div>
-          <div className="upload-desc">{imgFiles.length?imgFiles.map(f=>f.name).join(', '):'여러 장 선택 가능 (페이지별)'}</div>
+      )}
+
+      {tab === 'image' && (
+        <label className={`upload-zone ${imgFiles.length ? 'has-file' : ''}`}>
+          <input type="file" accept="image/jpeg,image/png" multiple onChange={e => {
+            const fs = Array.from(e.target.files);
+            if (fs.length) { setImgFiles(fs); update('recordFiles', fs); }
+          }} />
+          <div className="upload-title">{imgFiles.length ? `${imgFiles.length}개 이미지 선택됨` : '이미지를 클릭하거나 드래그'}</div>
+          <div className="upload-desc">{imgFiles.length ? imgFiles.map(f => f.name).join(', ') : '여러 장 선택 가능 (페이지별)'}</div>
           <span className="upload-hint">JPG · PNG 지원</span>
         </label>
-      </>}
+      )}
     </div>
   );
 }
 
-function OptionCard({form,update}){
-  return(
+function OptionCard({ form, update }) {
+  return (
     <div className="card">
-      <SecHead icon="⚙️" title="전형 옵션" sub="추가 전형 포함 여부"/>
-      <div className={`chk-opt ${form.hasEssay?'on':''}`} onClick={()=>update('hasEssay',!form.hasEssay)}>
-        <div className={`chk-box ${form.hasEssay?'on':''}`}>
-          {form.hasEssay&&<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M2.5 6.5L5.5 9.5L10.5 3.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/></svg>}
+      <div className="sec-head">
+        <div className="sec-icon">03</div>
+        <div>
+          <div className="sec-title">전형 옵션</div>
+          <div className="sec-sub">추가 전형 포함 여부 설정</div>
         </div>
-        <div className="chk-text"><h4>논술전형 포함 ✏️</h4><p>논술을 준비 중이라면 체크하세요. 결과에 논술전형 후보 1~2개가 포함됩니다.</p></div>
+      </div>
+      <div className={`chk-opt ${form.hasEssay ? 'on' : ''}`} onClick={() => update('hasEssay', !form.hasEssay)}>
+        <div className={`chk-box ${form.hasEssay ? 'on' : ''}`}>
+          {form.hasEssay && (
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 6L5 9L10 3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          )}
+        </div>
+        <div className="chk-text">
+          <h4>논술전형 포함</h4>
+          <p>논술을 준비 중이라면 체크하세요. 결과에 논술전형 카드 1~2개가 포함됩니다.</p>
+        </div>
       </div>
     </div>
   );
 }
 
-function SubmitBar({onClick,valid}){
-  return(
-    <div className="submit-bar"><div className="submit-inner">
-      <button className="submit-btn" onClick={onClick} disabled={!valid} type="button">
-        {valid?'🤖  AI 분석 시작하기 →':'이름·학교·학과를 모두 입력해주세요'}
-      </button>
-      {valid&&<div className="submit-hint">분석까지 약 20~30초 소요됩니다</div>}
-    </div></div>
-  );
-}
-
-function AnalyzingScreen(){
-  const [cur,setCur]=useState(0);
-  useEffect(()=>{const t=setInterval(()=>setCur(c=>c<STEPS.length-1?c+1:c),4500);return()=>clearInterval(t);},[]);
-  return(
-    <div className="analyzing-wrap"><div className="analyzing-inner">
-      <span className="analyzing-robot">🤖</span>
-      <h2>AI 분석 중...</h2><p>약 20~30초 소요됩니다</p>
-      <div className="a-steps">
-        {STEPS.map((s,i)=>{const cls=i<cur?'done':i===cur?'active':'pending';return(
-          <div key={i} className="a-step"><div className={`a-dot ${cls}`}>{i<cur?'✓':i===cur?'●':'○'}</div><span className={`a-label ${cls}`}>{s}</span></div>
-        );})}
+function SubmitBar({ onClick, valid }) {
+  return (
+    <div className="submit-bar">
+      <div className="submit-inner">
+        <button className="submit-btn" onClick={onClick} disabled={!valid} type="button">
+          {valid ? 'AI 분석 시작하기' : '이름 · 학교 · 학과를 모두 입력해주세요'}
+        </button>
+        {valid && <div className="submit-hint">분석까지 약 20~30초 소요됩니다</div>}
       </div>
-    </div></div>
+    </div>
   );
 }
 
-function AnalysisBox({analysis}){
-  const {majorFit,activityFocus,academicGrowth,overallCompetitiveness}=analysis;
-  const cc={'상':'#059669','중':'#2563EB','하':'#DC2626'};
-  const cb={'상':'#D1FAE5','중':'#DBEAFE','하':'#FEE2E2'};
-  const c=overallCompetitiveness||'중';
-  return(
+/* ── Analyzing ── */
+function AnalyzingScreen() {
+  const [cur, setCur] = useState(0);
+  useEffect(() => {
+    const t = setInterval(() => setCur(c => c < STEPS.length - 1 ? c + 1 : c), 4500);
+    return () => clearInterval(t);
+  }, []);
+  return (
+    <div className="analyzing-wrap">
+      <div className="analyzing-inner">
+        <div className="analyzing-spinner" />
+        <h2>AI 분석 중</h2>
+        <p>약 20~30초 소요됩니다</p>
+        <div className="a-steps">
+          {STEPS.map((s, i) => {
+            const cls = i < cur ? 'done' : i === cur ? 'active' : 'pending';
+            return (
+              <div key={i} className="a-step">
+                <div className={`a-dot ${cls}`}>{i < cur ? '✓' : i === cur ? '●' : '○'}</div>
+                <span className={`a-label ${cls}`}>{s}</span>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── AnalysisBox ── */
+function AnalysisBox({ analysis, strategy }) {
+  const { majorFit, activityFocus, academicGrowth, overallCompetitiveness } = analysis;
+  const cc = { '상':'#047857', '중':'#1D4ED8', '하':'#B91C1C' };
+  const cb = { '상':'#D1FAE5', '중':'#DBEAFE', '하':'#FEE2E2' };
+  const c = overallCompetitiveness || '중';
+  return (
     <div className="analysis-box">
-      <div className="ab-header"><span className="ab-title">🤖 생기부 경쟁력 분석</span><span className="comp-badge" style={{color:cc[c],background:cb[c]}}>종합 {c}</span></div>
+      <div className="ab-header">
+        <span className="ab-title">생기부 경쟁력 분석</span>
+        <span className="comp-badge" style={{ color: cc[c], background: cb[c] }}>종합 {c}</span>
+      </div>
       <div className="ab-metrics">
-        {[['전공적합성',majorFit],['활동집중도',activityFocus],['학업성장성',academicGrowth]].map(([k,v])=>(
-          <div key={k} className="ab-metric"><div className="ab-metric-lbl">{k}</div><div className="ab-metric-val">{v||'-'}</div></div>
+        {[['전공적합성', majorFit], ['활동집중도', activityFocus], ['학업성장성', academicGrowth], ['비교과품질', analysis.extracurricularQuality]].map(([k, v]) => (
+          <div key={k} className="ab-metric">
+            <div className="ab-metric-lbl">{k}</div>
+            <div className="ab-metric-val">{v || '-'}</div>
+          </div>
         ))}
       </div>
+      {strategy && <div style={{ marginTop:12, fontSize:11, color:'#6B7280', lineHeight:1.5, paddingTop:10, borderTop:'1px solid #F3F4F6' }}>{strategy}</div>}
     </div>
   );
 }
 
-function ResultCard({card,idx}){
-  const p=POSS[card.possibility]||POSS['적정'];
-  const tc=TYPE_CLR[card.admissionType]||'#374151';
-  return(
+/* ── ResultCard ── */
+function ResultCard({ card, idx }) {
+  const p = POSS[card.possibility] || POSS['적정'];
+  const ts = TYPE_STYLE[card.admissionType] || { bg:'#F3F4F6', color:'#374151' };
+
+  const fmtCut = v => (v == null || v === '-') ? <span className="null">-</span> : <span className="cut">{v}</span>;
+  const fmtNum = v => (v == null || v === '-') ? '-' : v;
+
+  return (
     <div className="result-card">
-      <div className="rc-bar" style={{background:p.bar}}/>
+      <div className="rc-bar" style={{ background: p.bar }} />
       <div className="rc-body">
-        <div className="rc-hd"><div className="rc-rank">{idx+1}</div><div className="rc-poss" style={{color:p.color,background:p.bg}}>{card.possibility}</div><div className="rc-type" style={{color:tc}}>{card.admissionType}</div></div>
-        <div className="rc-univ">{card.university}</div>
-        <div className="rc-dept">{card.department}</div>
-        <div className="rc-program">
-          {card.region&&<span className="rc-region">{card.region}</span>}
-          {card.programName&&<span style={{fontSize:'11px',color:'var(--g500)'}}>{card.programName}</span>}
-          {card.essayDate&&<span className="rc-essay-date">📅 {card.essayDate}</span>}
+        {/* 배지 행 */}
+        <div className="rc-badges">
+          <div className="rc-rank">{idx + 1}</div>
+          <div className="rc-poss" style={{ color: p.color, background: p.bg }}>{card.possibility}</div>
+          <div className="rc-type" style={{ background: ts.bg, color: ts.color }}>{card.admissionType}</div>
+          {card.region && <div className="rc-region-badge">{card.region}</div>}
+          {card.essayDate && <div className="rc-essay-badge">논술 {card.essayDate}</div>}
         </div>
-        {card.convertedScore!=null&&<div className="rc-converted">환산점수 {Number(card.convertedScore).toFixed(2)}점</div>}
-        {card.cutlines&&card.cutlines.length>0&&(
-          <div className="rc-cuts">
-            {card.cutlines.map((c,i)=>(
-              <div key={i} className="rc-cut">
-                <span className="rc-cut-yr">{c.year}학년도</span>
-                <span className="rc-cut-val">{c.value}등급</span>
-                {c.rate&&<span style={{fontSize:'9px',color:'var(--g400)',display:'block'}}>경쟁 {c.rate}:1</span>}
-                {c.waitlist!=null&&<span style={{fontSize:'9px',color:'var(--g400)',display:'block'}}>충원 {c.waitlist}</span>}
-              </div>
-            ))}
-            {card.recruitChange&&<div className="rc-cut" style={{background:'#FFF8E6'}}>
-              <span className="rc-cut-yr">전년대비</span>
-              <span className="rc-cut-val" style={{fontSize:'12px',color:'var(--orange)'}}>{card.recruitChange}</span>
-            </div>}
+
+        {/* 대학명 */}
+        <div className="rc-univ">{card.university}</div>
+        <div className="rc-dept-row">
+          {card.category && <span className="rc-category">{card.category}</span>}
+          {card.category && <span style={{color:'#E5E7EB'}}>·</span>}
+          <span className="rc-dept">{card.department}</span>
+        </div>
+        <div className="rc-program">{card.programName}</div>
+
+        {/* 3개년 입결 테이블 */}
+        {card.cutlines && card.cutlines.length > 0 && (
+          <table className="rc-table">
+            <thead>
+              <tr>
+                <th>학년도</th>
+                <th>컷 등급</th>
+                <th>경쟁률</th>
+                <th>충원</th>
+              </tr>
+            </thead>
+            <tbody>
+              {card.cutlines.map((c, i) => (
+                <tr key={i}>
+                  <td style={{fontWeight:700,color:'#374151'}}>{c.year}</td>
+                  <td>{fmtCut(c.cut)}</td>
+                  <td>{fmtNum(c.rate) !== '-' ? `${c.rate}:1` : '-'}</td>
+                  <td>{fmtNum(c.waitlist)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* 모집인원 / 전년대비 */}
+        <div className="rc-meta-row">
+          {card.recruitCount != null && (
+            <div className="rc-meta-item">
+              <span className="rc-meta-label">모집인원</span>
+              <span className="rc-meta-val">{card.recruitCount}명</span>
+            </div>
+          )}
+          {card.recruitChange && card.recruitChange !== '-' && (
+            <div className="rc-meta-item">
+              <span className="rc-meta-label">전년대비</span>
+              <span className="rc-meta-val" style={{color: card.recruitChange.startsWith('▲') ? '#047857' : '#B91C1C'}}>
+                {card.recruitChange}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* 수능최저 */}
+        {card.suneungMin && (
+          <div className={`rc-suneung ${card.suneungMin === '없음' ? 'none' : 'has'}`}>
+            수능최저 {card.suneungMin}
           </div>
         )}
-        <div className="rc-meta">
-          {card.competitionRate&&<span>경쟁률 <strong>{card.competitionRate}:1</strong></span>}
-          {card.refundRate!=null&&<span>충원 <strong>{card.refundRate}%</strong></span>}
-        </div>
-        {card.suneungMin&&<div className={`rc-suneung ${card.suneungMin==='없음'?'none':'has'}`}>수능최저 {card.suneungMin}</div>}
-        {card.aiReport&&<div className="rc-report">{card.aiReport}</div>}
+
+        {/* 전형방법 */}
+        {card.admissionMethod && (
+          <div className="rc-method">전형방법 · {card.admissionMethod}</div>
+        )}
+
+        {/* AI 리포트 */}
+        {card.aiReport && (
+          <div className="rc-report">{card.aiReport}</div>
+        )}
       </div>
     </div>
   );
 }
 
-async function exportToWord(result,form){
+/* ── Word Export ── */
+async function exportToWord(result, form) {
   try {
-  const D=window.docx;
-  if(!D){alert('docx 라이브러리 로드 실패');return;}
-  const {Document,Packer,Paragraph,TextRun,HeadingLevel,AlignmentType}=D;
-  const br=()=>new Paragraph({text:''});
-  const tx=(text,bold=false)=>new Paragraph({children:[new TextRun({text:String(text||''),bold,size:bold?26:22})]});
-  const h1=(text)=>new Paragraph({text,heading:HeadingLevel.HEADING_1,alignment:AlignmentType.CENTER});
-  const h2=(text)=>new Paragraph({text,heading:HeadingLevel.HEADING_2});
-  const children=[h1('필탑 UniChoice 수시 배치 분석 리포트'),tx(`분석일: ${new Date().toLocaleDateString('ko-KR')}`),br(),h2('학생 정보'),tx(`이름: ${form.name}`),tx(`학교: ${form.school}`),tx(`희망학과: ${form.major}`),br()];
-  if(result.student?.analysis){const a=result.student.analysis;children.push(h2('생기부 경쟁력 분석'),tx(`전공적합성: ${a.majorFit||'-'}`),tx(`활동집중도: ${a.activityFocus||'-'}`),tx(`학업성장성: ${a.academicGrowth||'-'}`),tx(`종합경쟁력: ${a.overallCompetitiveness||'-'}`),br());}
-  children.push(h2('배치 후보 10개'));
-  (result.cards||[]).forEach((card,i)=>{
-    const cut=(card.cutlines||[]).map(c=>`${c.year}학년도 ${c.value}등급`).join(' / ');
-    children.push(br(),tx(`${i+1}. ${card.university} ${card.department}`,true),tx(`전형: ${card.admissionType} | 합격가능성: ${card.possibility}`),card.convertedScore!=null?tx(`환산점수: ${Number(card.convertedScore).toFixed(2)}점`):br(),cut?tx(`입결 추이: ${cut}`):br(),tx(`경쟁률: ${card.competitionRate||'-'}:1 | 충원율: ${card.refundRate!=null?card.refundRate+'%':'-'}`),tx(`수능최저: ${card.suneungMin||'없음'}`),tx(`AI 리포트: ${card.aiReport||''}`));
-  });
-  const doc=new Document({sections:[{properties:{},children}]});
-  const blob=await Packer.toBlob(doc);
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download=`UniChoice_${form.name}_${new Date().toISOString().slice(0,10)}.docx`;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
-  } catch(err){ alert('Word 출력 오류: '+err.message); }
+    const D = window.docx;
+    if (!D) { alert('docx 라이브러리 로드 실패'); return; }
+    const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
+            HeadingLevel, AlignmentType, WidthType, BorderStyle } = D;
+
+    const br = () => new Paragraph({ text: '' });
+    const tx = (text, opts = {}) => new Paragraph({
+      children: [new TextRun({ text: String(text || ''), ...opts })]
+    });
+    const h1 = text => new Paragraph({
+      text, heading: HeadingLevel.HEADING_1, alignment: AlignmentType.CENTER
+    });
+    const h2 = text => new Paragraph({ text, heading: HeadingLevel.HEADING_2 });
+
+    const noBorder = {
+      top:    { style: BorderStyle.SINGLE, size: 1, color: 'D1D5DB' },
+      bottom: { style: BorderStyle.SINGLE, size: 1, color: 'D1D5DB' },
+      left:   { style: BorderStyle.SINGLE, size: 1, color: 'D1D5DB' },
+      right:  { style: BorderStyle.SINGLE, size: 1, color: 'D1D5DB' },
+    };
+
+    const cell = (text, bold = false, shade = false) => new TableCell({
+      children: [new Paragraph({
+        children: [new TextRun({ text: String(text ?? '-'), bold, size: 18 })]
+      })],
+      shading: shade ? { fill: 'F3F4F6' } : undefined,
+      borders: noBorder,
+    });
+
+    const children = [
+      h1('필탑 UniChoice 수시 배치 분석 리포트'),
+      tx(`분석일: ${new Date().toLocaleDateString('ko-KR')}  |  2027학년도`, { size: 18, color: '6B7280' }),
+      br(),
+      h2('학생 정보'),
+      tx(`이름: ${form.name}  |  학교: ${form.school}  |  희망학과: ${form.major}`, { size: 20 }),
+      br(),
+    ];
+
+    if (result.student?.analysis) {
+      const a = result.student.analysis;
+      children.push(
+        h2('생기부 경쟁력 분석'),
+        tx(`전공적합성: ${a.majorFit || '-'}  |  활동집중도: ${a.activityFocus || '-'}  |  학업성장성: ${a.academicGrowth || '-'}  |  종합경쟁력: ${a.overallCompetitiveness || '-'}`, { size: 20 }),
+        tx(`비교과 품질: ${a.extracurricularQuality || '-'}  |  진로 명확성: ${a.careerClear ? '명확' : '불명확'}`, { size: 20 }),
+      );
+      if (result.student.strategy) children.push(tx(`배치 전략: ${result.student.strategy}`, { size: 18, color: '374151' }));
+      children.push(br());
+    }
+
+    children.push(h2('배치 후보'));
+
+    for (const [i, card] of (result.cards || []).entries()) {
+      children.push(br());
+      children.push(new Paragraph({
+        children: [new TextRun({ text: `${i + 1}. ${card.university} · ${card.department}`, bold: true, size: 24 })]
+      }));
+      children.push(tx(
+        `${card.admissionType}  |  ${card.programName || '-'}  |  합격가능성: ${card.possibility}  |  ${card.region || '-'}`,
+        { size: 18, color: '374151' }
+      ));
+
+      // 입결 테이블
+      if (card.cutlines?.length) {
+        const hdrRow = new TableRow({ children: [
+          cell('학년도', true, true), cell('컷 등급', true, true),
+          cell('경쟁률', true, true), cell('충원', true, true),
+        ]});
+        const dataRows = card.cutlines.map(c => new TableRow({ children: [
+          cell(c.year), cell(c.cut ?? '-'), cell(c.rate ? `${c.rate}:1` : '-'), cell(c.waitlist ?? '-'),
+        ]}));
+        children.push(new Table({
+          width: { size: 100, type: WidthType.PERCENTAGE },
+          rows: [hdrRow, ...dataRows],
+        }));
+      }
+
+      children.push(tx(
+        `모집인원: ${card.recruitCount ?? '-'}명  |  전년대비: ${card.recruitChange || '-'}  |  수능최저: ${card.suneungMin || '-'}`,
+        { size: 18 }
+      ));
+      if (card.admissionMethod) children.push(tx(`전형방법: ${card.admissionMethod}`, { size: 18 }));
+      if (card.aiReport) children.push(tx(card.aiReport, { size: 18, color: '374151' }));
+    }
+
+    const doc = new Document({ sections: [{ properties: {}, children }] });
+    const blob = await Packer.toBlob(doc);
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `UniChoice_${form.name}_${new Date().toISOString().slice(0, 10)}.docx`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  } catch(err) { alert('Word 출력 오류: ' + err.message); }
 }
 
-function ResultScreen({result,form,onHome}){
-  const [exporting,setExporting]=useState(false);
-  const handleExport=async()=>{setExporting(true);try{await exportToWord(result,form);}catch(e){alert('Word 출력 오류: '+e.message);}setExporting(false);};
-  return(<>
-    <Header onHome={onHome}/>
-    <StepProgress step={3}/>
-    <main className="main" style={{paddingBottom:40}}>
-      {result.student?.analysis&&<AnalysisBox analysis={result.student.analysis}/>}
-      <div className="result-top"><h2>배치 후보 {(result.cards||[]).length}개</h2><button className="export-btn" onClick={handleExport} disabled={exporting}>{exporting?'출력 중...':'📄 Word 출력'}</button></div>
-      {(result.cards||[]).map((card,i)=><ResultCard key={i} card={card} idx={i}/>)}
-    </main>
-  </>);
-}
-
-function App(){
-  const [screen,setScreen]=useState('home');
-  const [form,setForm]=useState({name:'',school:'',major:'',record:'',recordFile:null,recordFiles:[],hasEssay:false});
-  const [result,setResult]=useState(null);
-  const [error,setError]=useState(null);
-  const [submitted,setSubmitted]=useState(false);
-  const update=useCallback((k,v)=>setForm(p=>({...p,[k]:v})),[]);
-
-  const handleAnalyze=async()=>{
-    setSubmitted(true);
-    if(!isFormValid(form))return;
-    setScreen('analyzing');setError(null);
-    try{
-      const payload={name:form.name,school:form.school,major:form.major,record:(form.record||"").slice(0,4000),hasEssay:form.hasEssay};
-      if(form.recordFile){payload.recordFileBase64=await toB64(form.recordFile);payload.recordFileName=form.recordFile.name;}
-      if(form.recordFiles.length){payload.recordFilesBase64=await Promise.all(form.recordFiles.map(f=>toB64(f)));payload.recordFileNames=form.recordFiles.map(f=>f.name);}
-      const res=await fetch('/api/proxy',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-      if(!res.ok){const t=await res.text().catch(()=>'');throw new Error(t||`서버 오류 ${res.status}`);}
-      const data=await res.json();
-      setResult(data);setScreen('result');
-    }catch(err){setError(err.message);setScreen('form');}
+/* ── ResultScreen ── */
+function ResultScreen({ result, form, onHome }) {
+  const [exporting, setExporting] = useState(false);
+  const handleExport = async () => {
+    setExporting(true);
+    try { await exportToWord(result, form); } catch(e) { alert('Word 출력 오류: ' + e.message); }
+    setExporting(false);
   };
 
-  if(screen==='home') return <HomeScreen onStart={()=>setScreen('form')}/>;
-  if(screen==='analyzing') return <AnalyzingScreen/>;
-  if(screen==='result') return <ResultScreen result={result} form={form} onHome={()=>setScreen('home')}/>;
-
-  return(<>
-    <Header onHome={()=>setScreen('home')}/>
-    <StepProgress step={1}/>
-    <main className="main">
-      {error&&<div className="error-box">⚠ {error}</div>}
-      <div className="intro">
-        <h2>수시 배치 분석을 시작합니다</h2>
-        <p>생기부를 업로드하면 AI가 내신 등급·활동을 자동 추출하여<br/>실제 입결 데이터와 비교 후 최적 배치 후보 10개를 추천합니다.</p>
-        <div className="intro-steps">
-          {[['✏️','정보 입력','생기부 업로드'],['🤖','AI 분석','20~30초'],['📊','배치 결과','카드 10개']].map(([ic,t,s],i,arr)=>(
-            <React.Fragment key={i}>
-              <div className="intro-step"><div className="intro-step-icon">{ic}</div><div className="intro-step-text"><strong>{t}</strong>{s}</div></div>
-              {i<arr.length-1&&<span className="intro-arrow">›</span>}
-            </React.Fragment>
-          ))}
+  return (
+    <>
+      <Header onHome={onHome} />
+      <StepProgress step={3} />
+      <main className="main" style={{ paddingBottom: 40 }}>
+        {result.student?.analysis && (
+          <AnalysisBox analysis={result.student.analysis} strategy={result.student.strategy} />
+        )}
+        <div className="result-hd">
+          <h2>배치 후보 {(result.cards || []).length}장</h2>
+          <button className="export-btn" onClick={handleExport} disabled={exporting}>
+            {exporting ? '출력 중...' : 'Word 출력'}
+          </button>
         </div>
-      </div>
-      <StudentCard form={form} update={update} submitted={submitted}/>
-      <RecordCard form={form} update={update}/>
-      <OptionCard form={form} update={update}/>
-    </main>
-    <SubmitBar onClick={handleAnalyze} valid={isFormValid(form)}/>
-  </>);
+        <div className="result-strategy">
+          {result.student?.strategy || ''}
+        </div>
+        {(result.cards || []).map((card, i) => <ResultCard key={i} card={card} idx={i} />)}
+      </main>
+    </>
+  );
 }
 
-ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+/* ── App ── */
+function App() {
+  const [screen, setScreen] = useState('home');
+  const [form, setForm] = useState({
+    name:'', school:'', major:'', record:'',
+    recordFile: null, recordFiles: [], hasEssay: false,
+  });
+  const [result, setResult] = useState(null);
+  const [error, setError] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const update = useCallback((k, v) => setForm(p => ({ ...p, [k]: v })), []);
+
+  const handleAnalyze = async () => {
+    setSubmitted(true);
+    if (!isFormValid(form)) return;
+    setScreen('analyzing'); setError(null);
+    try {
+      const payload = {
+        name: form.name, school: form.school, major: form.major,
+        record: (form.record || '').slice(0, 5000),
+        hasEssay: form.hasEssay,
+      };
+      const res = await fetch('/api/proxy', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const t = await res.text().catch(() => '');
+        throw new Error(t || `서버 오류 ${res.status}`);
+      }
+      const data = await res.json();
+      setResult(data); setScreen('result');
+    } catch(err) {
+      setError(err.message); setScreen('form');
+    }
+  };
+
+  if (screen === 'home') return <HomeScreen onStart={() => setScreen('form')} />;
+  if (screen === 'analyzing') return <AnalyzingScreen />;
+  if (screen === 'result') return <ResultScreen result={result} form={form} onHome={() => setScreen('home')} />;
+
+  return (
+    <>
+      <Header onHome={() => setScreen('home')} />
+      <StepProgress step={1} />
+      <main className="main">
+        {error && <div className="error-box">{error}</div>}
+        <div className="intro">
+          <h2>수시 배치 분석을 시작합니다</h2>
+          <p>생기부를 입력하면 AI가 내신 등급과 비교과 활동을 자동 분석하여<br />실제 입결 데이터 기반 최적 배치 카드를 생성합니다.</p>
+          <div className="intro-steps">
+            {[['01','정보 입력','생기부 업로드'], ['02','AI 분석','20~30초'], ['03','배치 결과','카드 6~7장']].map(([ic, t, s], i, arr) => (
+              <React.Fragment key={i}>
+                <div className="intro-step">
+                  <div className="intro-step-icon">{ic}</div>
+                  <div className="intro-step-text"><strong>{t}</strong>{s}</div>
+                </div>
+                {i < arr.length - 1 && <span className="intro-arrow">›</span>}
+              </React.Fragment>
+            ))}
+          </div>
+        </div>
+        <StudentCard form={form} update={update} submitted={submitted} />
+        <RecordCard form={form} update={update} />
+        <OptionCard form={form} update={update} />
+      </main>
+      <SubmitBar onClick={handleAnalyze} valid={isFormValid(form)} />
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>
 </body>
 </html>
