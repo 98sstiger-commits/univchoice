@@ -8,7 +8,6 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
@@ -270,21 +269,13 @@ const STEPS = [
 
 const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
-async function extractPdfText(file) {
-  try {
-    if (!window.pdfjsLib) return '';
-    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-    const arrayBuffer = await file.arrayBuffer();
-    const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
-    let text = '';
-    for (let i = 1; i <= Math.min(pdf.numPages, 20); i++) {
-      const page = await pdf.getPage(i);
-      const content = await page.getTextContent();
-      text += content.items.map(item => item.str).join(' ') + '\n';
-    }
-    return text.trim().slice(0, 5000);
-  } catch(e) { console.error('PDF 추출 오류:', e); return ''; }
+function fileToBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
 }
 
 /* ── HomeScreen ── */
@@ -507,20 +498,25 @@ function RecordCard({ form, update }) {
           <input type="file" accept=".pdf" onChange={async e => {
             const f = e.target.files[0]; if (!f) return;
             setPdfFile(f);
-            const txt = await extractPdfText(f);
-            if (txt && txt.trim().length > 50) update('record', txt);
+            const b64 = await fileToBase64(f);
+            update('recordFileBase64', b64);
+            update('recordFileName', f.name);
           }} />
           <div className="upload-title">{pdfFile ? pdfFile.name : 'PDF 파일을 클릭하거나 드래그'}</div>
-          <div className="upload-desc">{pdfFile ? `${(pdfFile.size / 1024).toFixed(0)} KB · 업로드 완료` : '나이스에서 출력한 생기부 PDF'}</div>
+          <div className="upload-desc">{pdfFile ? `${(pdfFile.size / 1024).toFixed(0)} KB · Claude가 직접 분석합니다` : '나이스에서 출력한 생기부 PDF'}</div>
           <span className="upload-hint">.pdf 파일만 지원</span>
         </label>
       )}
 
       {tab === 'image' && (
         <label className={`upload-zone ${imgFiles.length ? 'has-file' : ''}`}>
-          <input type="file" accept="image/jpeg,image/png" multiple onChange={e => {
+          <input type="file" accept="image/jpeg,image/png" multiple onChange={async e => {
             const fs = Array.from(e.target.files);
-            if (fs.length) { setImgFiles(fs); update('recordFiles', fs); }
+            if (!fs.length) return;
+            setImgFiles(fs);
+            const bases = await Promise.all(fs.map(fileToBase64));
+            update('recordFilesBase64', bases);
+            update('recordFileNames', fs.map(f => f.name));
           }} />
           <div className="upload-title">{imgFiles.length ? `${imgFiles.length}개 이미지 선택됨` : '이미지를 클릭하거나 드래그'}</div>
           <div className="upload-desc">{imgFiles.length ? imgFiles.map(f => f.name).join(', ') : '여러 장 선택 가능 (페이지별)'}</div>
@@ -853,7 +849,9 @@ function App() {
   const [screen, setScreen] = useState('home');
   const [form, setForm] = useState({
     name:'', school:'', major:'', record:'',
-    recordFile: null, recordFiles: [], hasEssay: false,
+    recordFileBase64: null, recordFileName: null,
+    recordFilesBase64: [], recordFileNames: [],
+    hasEssay: false,
   });
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -869,6 +867,10 @@ function App() {
         name: form.name, school: form.school, major: form.major,
         record: (form.record || '').slice(0, 5000),
         hasEssay: form.hasEssay,
+        recordFileBase64: form.recordFileBase64 || null,
+        recordFileName: form.recordFileName || null,
+        recordFilesBase64: form.recordFilesBase64?.length ? form.recordFilesBase64 : null,
+        recordFileNames: form.recordFileNames?.length ? form.recordFileNames : null,
       };
       const res = await fetch('/api/proxy', {
         method: 'POST',

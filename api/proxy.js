@@ -14,45 +14,50 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
 
-  const { name, school, major, record, hasEssay } = req.body;
+  const { name, school, major, record, hasEssay,
+          recordFileBase64, recordFileName,
+          recordFilesBase64, recordFileNames } = req.body;
   if (!name || !school || !major)
     return res.status(400).json({ error: '필수 필드 누락' });
 
   const recordText = (record || '').slice(0, 6000);
+  const hasPdf = !!recordFileBase64;
+  const hasImages = Array.isArray(recordFilesBase64) && recordFilesBase64.length > 0;
 
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const anthropic = new Anthropic({ apiKey });
 
     // ── STEP 1: 생기부 분석 ──────────────────────────────────────
+    const recordSection = (hasPdf || hasImages)
+      ? '위에 첨부된 생기부 문서/이미지를 직접 읽어 분석하세요. 성적 표에서 "석차등급" 컬럼의 숫자를 과목별로 정확히 읽으세요.'
+      : `[생활기록부]\n${recordText || '(생기부 미제공)'}`;
+
     const analysisPrompt = `대한민국 대입 전문 컨설턴트로서 학생 생기부를 분석해 JSON으로만 응답하세요.
 
 [학생] 이름:${name} | 학교:${school} | 희망학과:${major}
 
-[생활기록부]
-${recordText || '(생기부 미제공)'}
+${recordSection}
 
 ══ 석차등급 파싱 규칙 (반드시 준수) ══
-생기부 PDF에서 추출된 텍스트의 석차등급은 "과목명 숫자" 형태로 나타납니다.
-예: "국어 1" "수학 2" "영어 1" "한국사 2" "통합사회 3" "통합과학 2"
-- "석차등급" 또는 "등급" 컬럼 옆의 1~9 사이 단독 숫자가 해당 과목의 등급입니다.
-- 단위수(3, 2 등)와 혼동하지 마세요. 석차등급은 반드시 1~9 정수입니다.
-- 모든 과목의 석차등급을 수집한 뒤 단순 평균을 소수점 둘째 자리로 계산하세요.
-- 국영수: 국어·영어·수학 과목 등급의 평균
-- 국영수사: 국어·영어·수학·사회(통합사회/사회문화 등) 등급의 평균
-- 국영수사과: 국어·영어·수학·사회·과학(통합과학/물리 등) 등급의 평균
+- 성적 표의 "석차등급" 컬럼에서 각 과목의 1~9 사이 정수를 읽으세요.
+- 단위수(이수단위)와 혼동 금지 — 석차등급은 반드시 1~9 정수입니다.
+- 모든 과목 석차등급의 단순 평균 → 소수점 둘째 자리로 계산 (extractedGrade)
+- 국영수: 국어·영어·수학 등급 평균
+- 국영수사: 국어·영어·수학·사회계열 등급 평균
+- 국영수사과: 국어·영어·수학·사회·과학계열 등급 평균
 
 ══ overallCompetitiveness 판단 기준 ══
-- extractedGrade ≤ 2.0이면 반드시 "상"
-- extractedGrade 2.1~3.5이면 비교과 고려하여 "상" 또는 "중"
-- extractedGrade 3.6~5.0이면 "중"
-- extractedGrade > 5.0이면 "하"
+- extractedGrade ≤ 2.0 → 반드시 "상"
+- extractedGrade 2.1~3.5 → 비교과 고려하여 "상" 또는 "중"
+- extractedGrade 3.6~5.0 → "중"
+- extractedGrade > 5.0 → "하"
 
 ══ careerClear 판단 기준 ══
 아래 중 하나라도 해당하면 true:
-- 진로활동란에 CEO·경영·창업·업사이클링·환경·마케팅·교육·의학·법학·공학 등 일관된 진로 키워드가 2회 이상 등장
-- 세부능력특기사항에서 진로 관련 탐구·발표·프로젝트가 2개 이상 과목에 걸쳐 연계
-- 자율활동·동아리활동 주제가 진로와 명확히 연결됨
+- 진로활동란에 CEO·경영·창업·업사이클링·환경·마케팅·교육·의학·법학·공학 등 일관된 진로 키워드 2회 이상
+- 세특에서 진로 관련 탐구·발표·프로젝트가 2개 이상 과목에 걸쳐 연계
+- 자율·동아리 활동 주제가 진로와 명확히 연결됨
 
 JSON 형식으로만 응답 (다른 텍스트 없이):
 {
@@ -69,13 +74,31 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
   },
   "careerClear": true_또는_false,
   "extracurricularQuality": "우수|보통|미흡",
-  "gradeNote": "파싱된 주요 과목 등급 나열 + 특이사항 한줄 (예: 국1 수2 영1 사2 과2 → 평균 1.60)"
+  "gradeNote": "파싱된 주요 과목 등급 나열 + 특이사항 (예: 국1 수2 영1 사2 과2 → 평균 1.60)"
 }`;
+
+    // PDF · 이미지 · 텍스트 각각 content 배열 구성
+    let analysisContent;
+    if (hasPdf) {
+      analysisContent = [
+        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: recordFileBase64 } },
+        { type: 'text', text: analysisPrompt },
+      ];
+    } else if (hasImages) {
+      const imgBlocks = recordFilesBase64.map((b64, i) => {
+        const fname = (recordFileNames?.[i] || '').toLowerCase();
+        const mt = fname.endsWith('.png') ? 'image/png' : 'image/jpeg';
+        return { type: 'image', source: { type: 'base64', media_type: mt, data: b64 } };
+      });
+      analysisContent = [...imgBlocks, { type: 'text', text: analysisPrompt }];
+    } else {
+      analysisContent = analysisPrompt;
+    }
 
     const analysisMsg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
       max_tokens: 700,
-      messages: [{ role: 'user', content: analysisPrompt }],
+      messages: [{ role: 'user', content: analysisContent }],
     });
 
     let analysis = {
