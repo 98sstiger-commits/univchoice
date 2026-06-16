@@ -8,6 +8,7 @@
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
@@ -129,6 +130,18 @@
     .char-warn{font-size:11px;color:var(--orange)}
     .char-cnt{font-size:11px;color:var(--g400)}
     .char-ok{font-size:11px;color:var(--green);font-weight:600}
+    .rec-tabs{display:flex;gap:4px;background:var(--g100);border-radius:8px;padding:3px;margin-bottom:14px}
+    .rec-tab{flex:1;padding:8px 6px;border:none;border-radius:6px;background:transparent;font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
+    .rec-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+    .upload-zone{border:1.5px dashed var(--g300);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;display:block;width:100%}
+    .upload-zone:hover{border-color:var(--navy);background:var(--navy-lt)}
+    .upload-zone.has-file{border-color:var(--navy);background:var(--navy-lt);border-style:solid}
+    .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+    .upload-title{font-size:14px;font-weight:700;color:var(--g700);margin-bottom:5px}
+    .upload-zone.has-file .upload-title{color:var(--navy)}
+    .upload-desc{font-size:12px;color:var(--g400);line-height:1.5}
+    .upload-zone.has-file .upload-desc{color:var(--navy-mid)}
+    .upload-hint{margin-top:10px;display:inline-block;background:var(--g100);border-radius:5px;padding:3px 10px;font-size:11px;color:var(--g400)}
     .notice-box{background:var(--navy-lt);border:1px solid rgba(26,46,85,.1);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
     .notice-box-icon{width:20px;height:20px;background:var(--navy);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
     .notice-box-icon svg{width:11px;height:11px;fill:#fff}
@@ -304,6 +317,23 @@ const STEPS = [
 
 const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
+async function extractPdfText(file, maxPages = 10) {
+  const lib = window['pdfjs-dist/build/pdf'];
+  if (!lib) throw new Error('PDF.js 로드 실패');
+  lib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  const buf = await file.arrayBuffer();
+  const pdf = await lib.getDocument({ data: buf }).promise;
+  const pages = Math.min(pdf.numPages, maxPages);
+  let out = '';
+  for (let i = 1; i <= pages; i++) {
+    const pg = await pdf.getPage(i);
+    const ct = await pg.getTextContent();
+    out += ct.items.map(it => it.str).join(' ') + '\n';
+  }
+  return out.trim().slice(0, 5000); // payload 안전 상한
+}
+
 /* ── HomeScreen ── */
 function HomeScreen({ onStart }) {
   const [showHistory, setShowHistory] = useState(false);
@@ -468,9 +498,28 @@ function StudentCard({ form, update, submitted }) {
 }
 
 function RecordCard({ form, update }) {
+  const [tab, setTab] = useState('text');
+  const [pdfName, setPdfName] = useState('');
+  const [pdfLoading, setPdfLoading] = useState(false);
+  const [pdfMsg, setPdfMsg] = useState('');
   const len = form.record.length;
   const isGood = len >= 500;
   const isWarn = len > 0 && len < 200;
+
+  const handlePdf = async e => {
+    const f = e.target.files[0]; if (!f) return;
+    setPdfName(f.name); setPdfLoading(true); setPdfMsg(''); update('record', '');
+    try {
+      const text = await extractPdfText(f, 10);
+      if (!text) throw new Error('텍스트를 추출할 수 없습니다 (스캔 이미지 PDF는 지원 불가)');
+      update('record', text);
+      setPdfMsg(`✓ ${text.length.toLocaleString()}자 추출 완료`);
+    } catch(err) {
+      setPdfMsg('오류: ' + err.message);
+      setPdfName('');
+    }
+    setPdfLoading(false);
+  };
 
   return (
     <div className="card">
@@ -478,29 +527,57 @@ function RecordCard({ form, update }) {
         <div className="sec-icon">02</div>
         <div>
           <div className="sec-title">생활기록부</div>
-          <div className="sec-sub">나이스에서 복사 후 붙여넣기</div>
+          <div className="sec-sub">AI가 내신 · 비교과 자동 추출 및 분석</div>
         </div>
       </div>
-      <div className="notice-box">
-        <div className="notice-box-icon">
-          <svg viewBox="0 0 12 12"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM5.25 6h1.5v3h-1.5V6z"/></svg>
-        </div>
-        <div className="notice-box-text">
-          <strong>나이스 또는 학교 포털에서 생기부 전문 복사</strong> 후 아래에 붙여넣으세요.
-          내신 등급·비교과 활동을 AI가 자동 분석하여 배치 전략을 수립합니다.
-        </div>
+
+      <div className="rec-tabs">
+        {[['text','텍스트 붙여넣기'],['pdf','PDF 업로드']].map(([k,l]) =>
+          <button key={k} className={`rec-tab ${tab===k?'active':''}`}
+            onClick={() => setTab(k)} type="button">{l}</button>)}
       </div>
-      <div className="field">
-        <textarea
-          placeholder={"[교과학습 발달상황]\n\n국어: ...\n수학: ...\n\n[세부능력 및 특기사항]\n...\n\n[창의적 체험활동]\n...\n\n[행동특성 및 종합의견]\n..."}
-          value={form.record} onChange={e => update('record', e.target.value)} />
-        <div className="char-info">
-          {isWarn ? <span className="char-warn">500자 이상 입력 권장</span>
-            : isGood ? <span className="char-ok">분석에 충분합니다</span>
-            : <span />}
-          <span className={`char-cnt ${isGood ? 'char-ok' : ''}`}>{len.toLocaleString()}자</span>
+
+      {tab === 'text' && (
+        <div className="field">
+          <textarea
+            placeholder={"[교과학습 발달상황]\n\n국어: ...\n수학: ...\n\n[세부능력 및 특기사항]\n...\n\n[창의적 체험활동]\n...\n\n[행동특성 및 종합의견]\n..."}
+            value={form.record} onChange={e => update('record', e.target.value)} />
+          <div className="char-info">
+            {isWarn ? <span className="char-warn">500자 이상 입력 권장</span>
+              : isGood ? <span className="char-ok">분석에 충분합니다</span>
+              : <span />}
+            <span className={`char-cnt ${isGood?'char-ok':''}`}>{len.toLocaleString()}자</span>
+          </div>
         </div>
-      </div>
+      )}
+
+      {tab === 'pdf' && (
+        <div>
+          <label className={`upload-zone ${pdfName && !pdfLoading ? 'has-file' : ''}`}
+                 style={pdfLoading ? {opacity:.65, pointerEvents:'none'} : {}}>
+            <input type="file" accept=".pdf" onChange={handlePdf} />
+            <div className="upload-title">
+              {pdfLoading ? '텍스트 추출 중...' : pdfName || 'PDF 파일을 클릭하거나 드래그'}
+            </div>
+            <div className="upload-desc">
+              {pdfLoading
+                ? '잠시만 기다려주세요'
+                : pdfName
+                  ? pdfMsg
+                  : '앞 10페이지 텍스트만 추출 · base64 전혀 없음 · 나이스 출력 PDF'}
+            </div>
+            <span className="upload-hint">.pdf · 텍스트 레이어가 있는 PDF만 가능</span>
+          </label>
+          {pdfMsg.startsWith('오류') && (
+            <div className="err-msg" style={{marginTop:8}}>{pdfMsg}</div>
+          )}
+          {pdfMsg.startsWith('✓') && (
+            <div style={{marginTop:8,padding:'9px 12px',background:'#D1FAE5',borderRadius:8,fontSize:12,color:'#047857',fontWeight:600}}>
+              {pdfMsg} · 전송 payload: ~{(len/1024).toFixed(1)}KB (텍스트만)
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }
