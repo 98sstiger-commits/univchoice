@@ -194,7 +194,10 @@
     .rc-poss{font-size:11px;font-weight:800;padding:3px 10px;border-radius:20px}
     .rc-type{font-size:11px;font-weight:700;margin-left:auto}
     .rc-univ{font-size:17px;font-weight:900;color:var(--g900);letter-spacing:-.3px;margin-bottom:2px}
-    .rc-dept{font-size:13px;color:var(--g500);margin-bottom:12px}
+    .rc-dept{font-size:13px;color:var(--g500);margin-bottom:4px}
+    .rc-program{font-size:11px;color:var(--g400);margin-bottom:8px}
+    .rc-region{display:inline-block;font-size:10px;font-weight:600;background:var(--g100);color:var(--g500);padding:2px 8px;border-radius:5px;margin-right:5px}
+    .rc-essay-date{display:inline-block;font-size:10px;font-weight:600;background:#F3E8FF;color:#7C3AED;padding:2px 8px;border-radius:5px}
     .rc-converted{display:inline-block;background:var(--navy-lt);color:var(--navy);font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:12px}
     .rc-cuts{display:flex;gap:6px;margin-bottom:10px}
     .rc-cut{background:var(--g50);border-radius:8px;padding:6px 10px;text-align:center;flex:1}
@@ -470,8 +473,28 @@ function ResultCard({card,idx}){
         <div className="rc-hd"><div className="rc-rank">{idx+1}</div><div className="rc-poss" style={{color:p.color,background:p.bg}}>{card.possibility}</div><div className="rc-type" style={{color:tc}}>{card.admissionType}</div></div>
         <div className="rc-univ">{card.university}</div>
         <div className="rc-dept">{card.department}</div>
+        <div className="rc-program">
+          {card.region&&<span className="rc-region">{card.region}</span>}
+          {card.programName&&<span style={{fontSize:'11px',color:'var(--g500)'}}>{card.programName}</span>}
+          {card.essayDate&&<span className="rc-essay-date">📅 {card.essayDate}</span>}
+        </div>
         {card.convertedScore!=null&&<div className="rc-converted">환산점수 {Number(card.convertedScore).toFixed(2)}점</div>}
-        {card.cutlines&&card.cutlines.length>0&&<div className="rc-cuts">{card.cutlines.map((c,i)=><div key={i} className="rc-cut"><span className="rc-cut-yr">{c.year}학년도</span><span className="rc-cut-val">{c.value}등급</span></div>)}</div>}
+        {card.cutlines&&card.cutlines.length>0&&(
+          <div className="rc-cuts">
+            {card.cutlines.map((c,i)=>(
+              <div key={i} className="rc-cut">
+                <span className="rc-cut-yr">{c.year}학년도</span>
+                <span className="rc-cut-val">{c.value}등급</span>
+                {c.rate&&<span style={{fontSize:'9px',color:'var(--g400)',display:'block'}}>경쟁 {c.rate}:1</span>}
+                {c.waitlist!=null&&<span style={{fontSize:'9px',color:'var(--g400)',display:'block'}}>충원 {c.waitlist}</span>}
+              </div>
+            ))}
+            {card.recruitChange&&<div className="rc-cut" style={{background:'#FFF8E6'}}>
+              <span className="rc-cut-yr">전년대비</span>
+              <span className="rc-cut-val" style={{fontSize:'12px',color:'var(--orange)'}}>{card.recruitChange}</span>
+            </div>}
+          </div>
+        )}
         <div className="rc-meta">
           {card.competitionRate&&<span>경쟁률 <strong>{card.competitionRate}:1</strong></span>}
           {card.refundRate!=null&&<span>충원 <strong>{card.refundRate}%</strong></span>}
@@ -484,6 +507,7 @@ function ResultCard({card,idx}){
 }
 
 async function exportToWord(result,form){
+  try {
   const D=window.docx;
   if(!D){alert('docx 라이브러리 로드 실패');return;}
   const {Document,Packer,Paragraph,TextRun,HeadingLevel,AlignmentType}=D;
@@ -504,6 +528,7 @@ async function exportToWord(result,form){
   const a=document.createElement('a');
   a.href=url;a.download=`UniChoice_${form.name}_${new Date().toISOString().slice(0,10)}.docx`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+  } catch(err){ alert('Word 출력 오류: '+err.message); }
 }
 
 function ResultScreen({result,form,onHome}){
