@@ -318,15 +318,6 @@ const STEPS = [
 
 const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
-function fileToBase64(file) {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(reader.result.split(',')[1]);
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
-  });
-}
-
 async function extractPdfText(file, maxPages = 15) {
   const pdfjsLib = window['pdfjs-dist/build/pdf'];
   pdfjsLib.GlobalWorkerOptions.workerSrc =
@@ -509,7 +500,6 @@ function StudentCard({ form, update, submitted }) {
 const REC_TABS = [
   { key: 'text', label: '텍스트 붙여넣기' },
   { key: 'pdf',  label: 'PDF 업로드' },
-  { key: 'image',label: '이미지 업로드' },
 ];
 
 function RecordCard({ form, update }) {
@@ -518,7 +508,6 @@ function RecordCard({ form, update }) {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [pdfError, setPdfError] = useState('');
   const [pdfExtracted, setPdfExtracted] = useState(0);
-  const [imgFiles, setImgFiles] = useState([]);
   const len = form.record.length;
   const isGood = len >= 500;
   const isWarn = len > 0 && len < 200;
@@ -571,8 +560,8 @@ function RecordCard({ form, update }) {
               update('record', '');
               try {
                 const text = await extractPdfText(f, 15);
-                if (!text.trim()) throw new Error('텍스트를 추출할 수 없습니다. 스캔 PDF는 이미지 탭을 이용하세요.');
-                update('record', text);
+                if (!text.trim()) throw new Error('텍스트를 추출할 수 없습니다. 스캔 PDF는 텍스트 탭에 직접 붙여넣기를 이용하세요.');
+                update('record', text.slice(0, 5000));
                 setPdfExtracted(text.length);
               } catch(err) {
                 setPdfError('PDF 추출 실패: ' + err.message);
@@ -600,21 +589,6 @@ function RecordCard({ form, update }) {
         </div>
       )}
 
-      {tab === 'image' && (
-        <label className={`upload-zone ${imgFiles.length ? 'has-file' : ''}`}>
-          <input type="file" accept="image/jpeg,image/png" multiple onChange={async e => {
-            const fs = Array.from(e.target.files);
-            if (!fs.length) return;
-            setImgFiles(fs);
-            const bases = await Promise.all(fs.map(fileToBase64));
-            update('recordFilesBase64', bases);
-            update('recordFileNames', fs.map(f => f.name));
-          }} />
-          <div className="upload-title">{imgFiles.length ? `${imgFiles.length}개 이미지 선택됨` : '이미지를 클릭하거나 드래그'}</div>
-          <div className="upload-desc">{imgFiles.length ? imgFiles.map(f => f.name).join(', ') : '여러 장 선택 가능 (페이지별)'}</div>
-          <span className="upload-hint">JPG · PNG 지원</span>
-        </label>
-      )}
     </div>
   );
 }
@@ -1093,8 +1067,6 @@ function App() {
   const [screen, setScreen] = useState('home');
   const [form, setForm] = useState({
     name:'', school:'', major:'', record:'',
-    recordFileBase64: null, recordFileName: null,
-    recordFilesBase64: [], recordFileNames: [],
     hasEssay: false,
     wishes: [],
   });
@@ -1111,10 +1083,8 @@ function App() {
       const validWishes = (form.wishes || []).filter(w => w.university.trim());
       const payload = {
         name: form.name, school: form.school, major: form.major,
-        record: (form.record || '').slice(0, 12000),
+        record: (form.record || '').slice(0, 5000),
         hasEssay: form.hasEssay,
-        recordFilesBase64: form.recordFilesBase64?.length ? form.recordFilesBase64 : null,
-        recordFileNames: form.recordFileNames?.length ? form.recordFileNames : null,
         wishes: validWishes.length ? validWishes : null,
       };
       const res = await fetch('/api/proxy', {

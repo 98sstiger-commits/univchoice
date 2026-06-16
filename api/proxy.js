@@ -14,23 +14,18 @@ module.exports = async function handler(req, res) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
 
-  const { name, school, major, record, hasEssay,
-          recordFilesBase64, recordFileNames,
-          wishes } = req.body;
+  const { name, school, major, record, hasEssay, wishes } = req.body;
   if (!name || !school || !major)
     return res.status(400).json({ error: '필수 필드 누락' });
 
-  const recordText = (record || '').slice(0, 12000);
-  const hasImages = Array.isArray(recordFilesBase64) && recordFilesBase64.length > 0;
+  const recordText = (record || '').slice(0, 5000);
 
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
     const anthropic = new Anthropic({ apiKey });
 
     // ── STEP 1: 생기부 분석 ──────────────────────────────────────
-    const recordSection = hasImages
-      ? '위에 첨부된 생기부 이미지를 직접 읽어 분석하세요. 성적 표에서 "석차등급" 컬럼의 숫자를 과목별로 정확히 읽으세요.'
-      : `[생활기록부]\n${recordText || '(생기부 미제공)'}`;
+    const recordSection = `[생활기록부]\n${recordText || '(생기부 미제공)'}`;
 
     const analysisPrompt = `대한민국 대입 전문 컨설턴트로서 학생 생기부를 분석해 JSON으로만 응답하세요.
 
@@ -83,18 +78,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
   "gradeNote": "파싱된 주요 과목 등급 나열 + 특이사항 (예: 국1 수2 영1 사2 과2 → 평균 1.60)"
 }`;
 
-    // 이미지 · 텍스트 content 배열 구성 (PDF는 클라이언트에서 텍스트 추출 후 record로 전달)
-    let analysisContent;
-    if (hasImages) {
-      const imgBlocks = recordFilesBase64.map((b64, i) => {
-        const fname = (recordFileNames?.[i] || '').toLowerCase();
-        const mt = fname.endsWith('.png') ? 'image/png' : 'image/jpeg';
-        return { type: 'image', source: { type: 'base64', media_type: mt, data: b64 } };
-      });
-      analysisContent = [...imgBlocks, { type: 'text', text: analysisPrompt }];
-    } else {
-      analysisContent = analysisPrompt;
-    }
+    const analysisContent = analysisPrompt;
 
     const analysisMsg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
