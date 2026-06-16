@@ -189,12 +189,41 @@
     .export-btn:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
     .result-strategy{font-size:11px;color:var(--g500);margin-bottom:16px;line-height:1.5}
 
-    /* 분석 박스 */
+    /* ══ RESULT TABS ══ */
+    .res-tabs{display:flex;gap:0;border-bottom:2px solid var(--g200);margin-bottom:20px}
+    .res-tab{padding:10px 20px;font-size:13px;font-weight:700;color:var(--g400);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;letter-spacing:-.1px;transition:color .15s}
+    .res-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
+    .section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    .section-hd h3{font-size:15px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+
+    /* ══ 분석 박스 ══ */
     .analysis-box{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px 20px;margin-bottom:14px}
     .ab-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .ab-title{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+    .ab-title{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
     .comp-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
-    .ab-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+
+    /* 4종 내신 */
+    .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
+    .grade-card{background:var(--navy-lt);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(26,46,85,.1)}
+    .grade-card-lbl{font-size:9px;font-weight:700;color:var(--g500);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
+    .grade-card-val{font-size:22px;font-weight:900;color:var(--navy);letter-spacing:-1px;line-height:1}
+    .grade-card-val.na{font-size:13px;font-weight:400;color:var(--g300)}
+
+    /* 학년별 추이 */
+    .year-trend{display:flex;align-items:center;background:var(--g50);border-radius:10px;padding:12px 16px;border:1px solid var(--g100);margin-bottom:14px}
+    .yt-item{flex:1;text-align:center}
+    .yt-label{font-size:10px;font-weight:600;color:var(--g400);margin-bottom:4px;letter-spacing:.2px}
+    .yt-val{font-size:17px;font-weight:800;color:var(--navy)}
+    .yt-val.na{font-size:12px;font-weight:400;color:var(--g300)}
+    .yt-arrow{color:var(--g300);font-size:14px;padding:0 6px;flex-shrink:0;padding-top:14px}
+
+    /* 분석 텍스트 박스 */
+    .atb{background:var(--g50);border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--g100)}
+    .atb-label{font-size:10px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
+    .atb-text{font-size:12px;color:var(--g700);line-height:1.75}
+
+    /* 4종 지표 */
+    .ab-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)}
     .ab-metric{background:var(--g50);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--g100)}
     .ab-metric-lbl{font-size:10px;color:var(--g400);margin-bottom:4px;letter-spacing:.2px}
     .ab-metric-val{font-size:13px;font-weight:800;color:var(--navy)}
@@ -236,9 +265,11 @@
     @media(max-width:500px){
       .mode-grid{grid-template-columns:1fr}
       .row2{grid-template-columns:1fr}
+      .grade-grid{grid-template-columns:1fr 1fr}
       .ab-metrics{grid-template-columns:1fr 1fr}
       .intro-arrow{display:none}
       .rc-table{font-size:11px}
+      .grade-card-val{font-size:18px}
     }
   </style>
 </head>
@@ -598,25 +629,81 @@ function AnalyzingScreen() {
 
 /* ── AnalysisBox ── */
 function AnalysisBox({ analysis, strategy }) {
-  const { majorFit, activityFocus, academicGrowth, overallCompetitiveness } = analysis;
+  const sg = analysis.subjectGrades || {};
+  const gy = analysis.gradesByYear || {};
   const cc = { '상':'#047857', '중':'#1D4ED8', '하':'#B91C1C' };
   const cb = { '상':'#D1FAE5', '중':'#DBEAFE', '하':'#FEE2E2' };
-  const c = overallCompetitiveness || '중';
+  const c = analysis.overallCompetitiveness || '중';
+  const fmt = v => v != null ? Number(v).toFixed(2) : null;
+  const hasYear = gy['1학년'] != null || gy['2학년'] != null || gy['3학년'] != null;
+
   return (
     <div className="analysis-box">
       <div className="ab-header">
-        <span className="ab-title">생기부 경쟁력 분석</span>
+        <span className="ab-title">내신 분석</span>
         <span className="comp-badge" style={{ color: cc[c], background: cb[c] }}>종합 {c}</span>
       </div>
+
+      {/* 4종 내신 평균 */}
+      <div className="grade-grid">
+        {[['전교과', sg['전교과']], ['국영수사과', sg['국영수사과']], ['국영수사', sg['국영수사']], ['국영수', sg['국영수']]].map(([k, v]) => (
+          <div key={k} className="grade-card">
+            <div className="grade-card-lbl">{k}</div>
+            {fmt(v)
+              ? <div className="grade-card-val">{fmt(v)}</div>
+              : <div className="grade-card-val na">-</div>}
+          </div>
+        ))}
+      </div>
+
+      {/* 학년별 추이 */}
+      {hasYear && (
+        <div className="year-trend">
+          {['1학년','2학년','3학년'].map((yr, i) => (
+            <React.Fragment key={yr}>
+              <div className="yt-item">
+                <div className="yt-label">{yr}</div>
+                {gy[yr] != null
+                  ? <div className="yt-val">{Number(gy[yr]).toFixed(2)}</div>
+                  : <div className="yt-val na">-</div>}
+              </div>
+              {i < 2 && <span className="yt-arrow">→</span>}
+            </React.Fragment>
+          ))}
+        </div>
+      )}
+
+      {/* 교과 분석 */}
+      {analysis.subjectAnalysis && (
+        <div className="atb">
+          <div className="atb-label">교과 분석</div>
+          <div className="atb-text">{analysis.subjectAnalysis}</div>
+        </div>
+      )}
+
+      {/* 비교과 분석 */}
+      {analysis.extracurricularAnalysis && (
+        <div className="atb">
+          <div className="atb-label">비교과 분석</div>
+          <div className="atb-text">{analysis.extracurricularAnalysis}</div>
+        </div>
+      )}
+
+      {/* 4종 생기부 지표 */}
       <div className="ab-metrics">
-        {[['전공적합성', majorFit], ['활동집중도', activityFocus], ['학업성장성', academicGrowth], ['비교과품질', analysis.extracurricularQuality]].map(([k, v]) => (
+        {[['전공적합성', analysis.majorFit], ['활동집중도', analysis.activityFocus], ['학업성장성', analysis.academicGrowth], ['비교과품질', analysis.extracurricularQuality]].map(([k, v]) => (
           <div key={k} className="ab-metric">
             <div className="ab-metric-lbl">{k}</div>
             <div className="ab-metric-val">{v || '-'}</div>
           </div>
         ))}
       </div>
-      {strategy && <div style={{ marginTop:12, fontSize:11, color:'#6B7280', lineHeight:1.5, paddingTop:10, borderTop:'1px solid #F3F4F6' }}>{strategy}</div>}
+
+      {strategy && (
+        <div style={{ marginTop:12, fontSize:11, color:'#6B7280', lineHeight:1.6, paddingTop:12, borderTop:'1px solid #F3F4F6' }}>
+          {strategy}
+        </div>
+      )}
     </div>
   );
 }
@@ -814,31 +901,52 @@ async function exportToWord(result, form) {
 
 /* ── ResultScreen ── */
 function ResultScreen({ result, form, onHome }) {
+  const [tab, setTab] = useState('analysis');
   const [exporting, setExporting] = useState(false);
   const handleExport = async () => {
     setExporting(true);
     try { await exportToWord(result, form); } catch(e) { alert('Word 출력 오류: ' + e.message); }
     setExporting(false);
   };
+  const cards = result.cards || [];
 
   return (
     <>
       <Header onHome={onHome} />
       <StepProgress step={3} />
       <main className="main" style={{ paddingBottom: 40 }}>
-        {result.student?.analysis && (
-          <AnalysisBox analysis={result.student.analysis} strategy={result.student.strategy} />
+        {/* 탭 */}
+        <div className="res-tabs">
+          <button className={`res-tab ${tab === 'analysis' ? 'active' : ''}`}
+                  onClick={() => setTab('analysis')}>분석</button>
+          <button className={`res-tab ${tab === 'cards' ? 'active' : ''}`}
+                  onClick={() => setTab('cards')}>배치카드 {cards.length}장</button>
+        </div>
+
+        {/* 분석 탭 */}
+        {tab === 'analysis' && (
+          result.student?.analysis
+            ? <AnalysisBox analysis={result.student.analysis} strategy={result.student.strategy} />
+            : <div style={{textAlign:'center',color:'#9CA3AF',padding:'40px 0',fontSize:13}}>분석 데이터 없음</div>
         )}
-        <div className="result-hd">
-          <h2>배치 후보 {(result.cards || []).length}장</h2>
-          <button className="export-btn" onClick={handleExport} disabled={exporting}>
-            {exporting ? '출력 중...' : 'Word 출력'}
-          </button>
-        </div>
-        <div className="result-strategy">
-          {result.student?.strategy || ''}
-        </div>
-        {(result.cards || []).map((card, i) => <ResultCard key={i} card={card} idx={i} />)}
+
+        {/* 배치카드 탭 */}
+        {tab === 'cards' && (
+          <>
+            <div className="section-hd">
+              <h3>배치 후보 {cards.length}장</h3>
+              <button className="export-btn" onClick={handleExport} disabled={exporting}>
+                {exporting ? '출력 중...' : 'Word 출력'}
+              </button>
+            </div>
+            {result.student?.strategy && (
+              <div style={{fontSize:11,color:'#6B7280',marginBottom:14,lineHeight:1.6,padding:'10px 14px',background:'#F9FAFB',borderRadius:8,border:'1px solid #E5E7EB'}}>
+                {result.student.strategy}
+              </div>
+            )}
+            {cards.map((card, i) => <ResultCard key={i} card={card} idx={i} />)}
+          </>
+        )}
       </main>
     </>
   );

@@ -72,8 +72,15 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
     "국영수사": 숫자_또는_null,
     "국영수": 숫자_또는_null
   },
+  "gradesByYear": {
+    "1학년": 숫자_또는_null,
+    "2학년": 숫자_또는_null,
+    "3학년": 숫자_또는_null
+  },
   "careerClear": true_또는_false,
   "extracurricularQuality": "우수|보통|미흡",
+  "subjectAnalysis": "교과 역량 분석 2~3문장: 내신 수준·추이·강점 과목 언급",
+  "extracurricularAnalysis": "비교과 역량 분석 2~3문장: 진로활동·동아리·세특 강점 언급",
   "gradeNote": "파싱된 주요 과목 등급 나열 + 특이사항 (예: 국1 수2 영1 사2 과2 → 평균 1.60)"
 }`;
 
@@ -97,7 +104,7 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
 
     const analysisMsg = await anthropic.messages.create({
       model: 'claude-sonnet-4-6',
-      max_tokens: 700,
+      max_tokens: 1000,
       messages: [{ role: 'user', content: analysisContent }],
     });
 
@@ -105,7 +112,9 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
       majorFit: '보통', activityFocus: '보통', academicGrowth: '보통',
       overallCompetitiveness: '중', extractedGrade: null,
       subjectGrades: { 전교과: null, 국영수사과: null, 국영수사: null, 국영수: null },
-      careerClear: false, extracurricularQuality: '보통', gradeNote: ''
+      gradesByYear: { '1학년': null, '2학년': null, '3학년': null },
+      careerClear: false, extracurricularQuality: '보통',
+      subjectAnalysis: '', extracurricularAnalysis: '', gradeNote: '',
     };
     try {
       const raw = analysisMsg.content[0].text.trim();
@@ -242,6 +251,8 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
     const gradeInfo = grade ? `전교과 ${grade}등급` : '내신 미추출';
     const subStr = Object.entries(analysis.subjectGrades || {})
       .filter(([,v]) => v != null).map(([k,v]) => `${k} ${v}`).join(' / ');
+    const yearStr = Object.entries(analysis.gradesByYear || {})
+      .filter(([,v]) => v != null).map(([k,v]) => `${k} ${v}`).join(' → ');
 
     const cardPrompt = `당신은 대한민국 최고의 대입 배치 전문 컨설턴트입니다.
 아래 학생 정보와 실제 입결 DB를 바탕으로 수시 배치 카드 ${totalCards}장을 JSON 배열로만 응답하세요.
@@ -249,9 +260,11 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
 [학생 정보]
 - 이름: ${name} / 학교: ${school}
 - 희망학과: ${major}
-- 내신: ${gradeInfo}${subStr ? ' (' + subStr + ')' : ''}
+- 내신: ${gradeInfo}${subStr ? ' (' + subStr + ')' : ''}${yearStr ? ' | 학년별: ' + yearStr : ''}
 - 생기부: 전공적합성 ${analysis.majorFit} / 활동집중도 ${analysis.activityFocus} / 학업성장성 ${analysis.academicGrowth} / 종합경쟁력 ${analysis.overallCompetitiveness}
 - 비교과: ${analysis.extracurricularQuality} / 진로명확성: ${analysis.careerClear ? '명확' : '불명확'}
+- 교과분석: ${analysis.subjectAnalysis || '-'}
+- 비교과분석: ${analysis.extracurricularAnalysis || '-'}
 
 [배치 전략]
 ${strategyDesc}
