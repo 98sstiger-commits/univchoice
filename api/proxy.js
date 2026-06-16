@@ -1,10 +1,6 @@
-// UniChoice AI 분석 엔진 v5 — 희망대학 레포트 + PDF 10페이지 제한
+// UniChoice AI 분석 엔진 v6 — PDF 텍스트 추출 방식 (base64 제거)
 const { createClient } = require('@supabase/supabase-js');
 const Anthropic = require('@anthropic-ai/sdk');
-
-module.exports.config = {
-  api: { bodyParser: { sizeLimit: '15mb' } },
-};
 
 const SUPABASE_URL = 'https://zmtldohklivkzpfdyflc.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InptdGxkb2hrbGl2a3pwZmR5ZmxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI5NjgxMDQsImV4cCI6MjA4ODU0NDEwNH0.cv1WrvDzNedVZABWyRCS9ARRxf4Si9qgeUqEvhpHWlo';
@@ -19,14 +15,12 @@ module.exports = async function handler(req, res) {
   if (!apiKey) return res.status(500).json({ error: 'API 키가 설정되지 않았습니다.' });
 
   const { name, school, major, record, hasEssay,
-          recordFileBase64, recordFileName,
           recordFilesBase64, recordFileNames,
           wishes } = req.body;
   if (!name || !school || !major)
     return res.status(400).json({ error: '필수 필드 누락' });
 
-  const recordText = (record || '').slice(0, 6000);
-  const hasPdf = !!recordFileBase64;
+  const recordText = (record || '').slice(0, 12000);
   const hasImages = Array.isArray(recordFilesBase64) && recordFilesBase64.length > 0;
 
   try {
@@ -34,8 +28,8 @@ module.exports = async function handler(req, res) {
     const anthropic = new Anthropic({ apiKey });
 
     // ── STEP 1: 생기부 분석 ──────────────────────────────────────
-    const recordSection = (hasPdf || hasImages)
-      ? '위에 첨부된 생기부 문서/이미지를 직접 읽어 분석하세요. 문서의 앞 10페이지(내신·비교과 핵심 영역)를 중심으로 분석하고, 성적 표에서 "석차등급" 컬럼의 숫자를 과목별로 정확히 읽으세요.'
+    const recordSection = hasImages
+      ? '위에 첨부된 생기부 이미지를 직접 읽어 분석하세요. 성적 표에서 "석차등급" 컬럼의 숫자를 과목별로 정확히 읽으세요.'
       : `[생활기록부]\n${recordText || '(생기부 미제공)'}`;
 
     const analysisPrompt = `대한민국 대입 전문 컨설턴트로서 학생 생기부를 분석해 JSON으로만 응답하세요.
@@ -89,14 +83,9 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
   "gradeNote": "파싱된 주요 과목 등급 나열 + 특이사항 (예: 국1 수2 영1 사2 과2 → 평균 1.60)"
 }`;
 
-    // PDF · 이미지 · 텍스트 각각 content 배열 구성
+    // 이미지 · 텍스트 content 배열 구성 (PDF는 클라이언트에서 텍스트 추출 후 record로 전달)
     let analysisContent;
-    if (hasPdf) {
-      analysisContent = [
-        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: recordFileBase64 } },
-        { type: 'text', text: analysisPrompt },
-      ];
-    } else if (hasImages) {
+    if (hasImages) {
       const imgBlocks = recordFilesBase64.map((b64, i) => {
         const fname = (recordFileNames?.[i] || '').toLowerCase();
         const mt = fname.endsWith('.png') ? 'image/png' : 'image/jpeg';

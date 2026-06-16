@@ -1,16 +1,16 @@
 {
+  "version": 2,
+  "builds": [
+    { "src": "api/proxy.js", "use": "@vercel/node" }
+  ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/$1" },
+    { "src": "/(.*)", "dest": "/index.html" }
+  ],
   "functions": {
     "api/proxy.js": {
       "maxDuration": 60,
-      "memory": 3008
+      "memory": 1024
     }
-  },
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/$1",
-      "config": { "bodyParser": { "sizeLimit": "15mb" } }
-    },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
+  }
 }
