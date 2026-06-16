@@ -10,10 +10,7 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-  <script>
-    if(window.pdfjsLib) window.pdfjsLib.GlobalWorkerOptions.workerSrc =
-      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-  </script>
+
   <style>
     [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
     [id*="ada"],[class*="ada"],[class*="a11y"]{display:none!important;visibility:hidden!important}
@@ -227,6 +224,27 @@ const TYPE_CLR={'학생부교과':'#1A2E55','학생부종합':'#2563EB','논술'
 const STEPS=['생기부 텍스트 분석 중','내신 등급 자동 추출 중','전공적합성·활동 분석 중','입결 데이터 조회 중','교과·종합·논술 후보 선별 중','최종 배치 리포트 생성 중'];
 const isFormValid=f=>f.name.trim()&&f.school.trim()&&f.major.trim();
 async function toB64(file){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);})}
+
+async function extractPdfText(file) {
+  try {
+    if (!window.pdfjsLib) { console.error('PDF.js 미로드'); return ''; }
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+    let text = '';
+    for (let i = 1; i <= Math.min(pdf.numPages, 20); i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    const result = text.trim().slice(0, 4000);
+    console.log('PDF 추출 완료:', result.length, '자');
+    return result;
+  } catch(e) {
+    console.error('PDF 추출 오류:', e);
+    return '';
+  }
+}
 
 /* ── HomeScreen ── */
 function HomeScreen({onStart}){
