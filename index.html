@@ -3,30 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <!-- UniChoice v8 2026-06-17d -->
   <title>UniChoice | 필탑</title>
-  <script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
-  <script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone@7.21.6/babel.min.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var src = document.getElementById('app-src');
-      if (!src) return;
-      try {
-        var result = Babel.transform(src.textContent, {
-          presets: [['react', { runtime: 'classic' }]],
-          filename: 'app.jsx'
-        });
-        (new Function(result.code))();
-      } catch(e) {
-        console.error('Babel transform error:', e);
-      }
-    });
-  </script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
   <style>
     [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
@@ -96,7 +78,7 @@
     .home-mini-s{font-size:10px;color:var(--g400)}
 
     /* ══ HEADER ══ */
-    .hdr{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:center;padding:0 22px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
+    .hdr{background:var(--navy);height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;position:sticky;top:0;z-index:200;box-shadow:0 2px 12px rgba(0,0,0,.2)}
     .hdr-logo{display:flex;align-items:center;gap:10px;cursor:pointer}
     .hdr-badge{background:rgba(255,255,255,.12);color:rgba(255,255,255,.8);font-size:11px;font-weight:700;padding:3px 9px;border-radius:5px;letter-spacing:.5px}
     .hdr-title{color:#fff;font-size:16px;font-weight:800;letter-spacing:-.5px}
@@ -148,10 +130,15 @@
     .char-warn{font-size:11px;color:var(--orange)}
     .char-cnt{font-size:11px;color:var(--g400)}
     .char-ok{font-size:11px;color:var(--green);font-weight:600}
+    .notice-box{background:var(--navy-lt);border:1px solid rgba(26,46,85,.1);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
+    .notice-box-icon{width:20px;height:20px;background:var(--navy);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+    .notice-box-icon svg{width:11px;height:11px;fill:#fff}
+    .notice-box-text{font-size:12px;color:var(--navy-mid);line-height:1.6}
+    .notice-box-text strong{font-weight:700;color:var(--navy)}
     .rec-tabs{display:flex;gap:4px;background:var(--g100);border-radius:8px;padding:3px;margin-bottom:14px}
     .rec-tab{flex:1;padding:8px 6px;border:none;border-radius:6px;background:transparent;font-size:12px;font-weight:600;color:var(--g500);cursor:pointer;font-family:inherit;transition:all .15s;white-space:nowrap}
     .rec-tab.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(0,0,0,.08)}
-    .upload-zone{border:1.5px dashed var(--g300);border-radius:10px;padding:28px 20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;display:block;width:100%}
+    .upload-zone{border:1.5px dashed var(--g300);border-radius:10px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .15s;position:relative;display:block;width:100%}
     .upload-zone:hover{border-color:var(--navy);background:var(--navy-lt)}
     .upload-zone.has-file{border-color:var(--navy);background:var(--navy-lt);border-style:solid}
     .upload-zone input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
@@ -160,11 +147,7 @@
     .upload-desc{font-size:12px;color:var(--g400);line-height:1.5}
     .upload-zone.has-file .upload-desc{color:var(--navy-mid)}
     .upload-hint{margin-top:10px;display:inline-block;background:var(--g100);border-radius:5px;padding:3px 10px;font-size:11px;color:var(--g400)}
-    .notice-box{background:var(--navy-lt);border:1px solid rgba(26,46,85,.1);border-radius:10px;padding:12px 14px;display:flex;gap:10px;align-items:flex-start;margin-bottom:14px}
-    .notice-box-icon{width:20px;height:20px;background:var(--navy);border-radius:5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
-    .notice-box-icon svg{width:11px;height:11px;fill:#fff}
-    .notice-box-text{font-size:12px;color:var(--navy-mid);line-height:1.6}
-    .notice-box-text strong{font-weight:700;color:var(--navy)}
+    .upload-zone.has-file .upload-hint{background:rgba(26,46,85,.1);color:var(--navy)}
     .chk-opt{display:flex;align-items:center;gap:14px;padding:14px 16px;border:1.5px solid var(--g200);border-radius:10px;cursor:pointer;transition:all .15s;user-select:none}
     .chk-opt:hover{border-color:var(--navy-mid);background:var(--navy-lt)}
     .chk-opt.on{border-color:var(--navy);background:var(--navy-lt)}
@@ -207,41 +190,12 @@
     .export-btn:disabled{background:var(--g200);color:var(--g400);cursor:not-allowed}
     .result-strategy{font-size:11px;color:var(--g500);margin-bottom:16px;line-height:1.5}
 
-    /* ══ RESULT TABS ══ */
-    .res-tabs{display:flex;gap:0;border-bottom:2px solid var(--g200);margin-bottom:20px}
-    .res-tab{padding:10px 20px;font-size:13px;font-weight:700;color:var(--g400);background:none;border:none;cursor:pointer;font-family:inherit;border-bottom:2px solid transparent;margin-bottom:-2px;letter-spacing:-.1px;transition:color .15s}
-    .res-tab.active{color:var(--navy);border-bottom-color:var(--navy)}
-    .section-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-    .section-hd h3{font-size:15px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
-
-    /* ══ 분석 박스 ══ */
+    /* 분석 박스 */
     .analysis-box{background:#fff;border:1px solid var(--g200);border-radius:14px;padding:18px 20px;margin-bottom:14px}
     .ab-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-    .ab-title{font-size:14px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
+    .ab-title{font-size:13px;font-weight:800;color:var(--navy);letter-spacing:-.2px}
     .comp-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.3px}
-
-    /* 4종 내신 */
-    .grade-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px}
-    .grade-card{background:var(--navy-lt);border-radius:10px;padding:12px 8px;text-align:center;border:1px solid rgba(26,46,85,.1)}
-    .grade-card-lbl{font-size:9px;font-weight:700;color:var(--g500);margin-bottom:6px;letter-spacing:.3px;text-transform:uppercase}
-    .grade-card-val{font-size:22px;font-weight:900;color:var(--navy);letter-spacing:-1px;line-height:1}
-    .grade-card-val.na{font-size:13px;font-weight:400;color:var(--g300)}
-
-    /* 학년별 추이 */
-    .year-trend{display:flex;align-items:center;background:var(--g50);border-radius:10px;padding:12px 16px;border:1px solid var(--g100);margin-bottom:14px}
-    .yt-item{flex:1;text-align:center}
-    .yt-label{font-size:10px;font-weight:600;color:var(--g400);margin-bottom:4px;letter-spacing:.2px}
-    .yt-val{font-size:17px;font-weight:800;color:var(--navy)}
-    .yt-val.na{font-size:12px;font-weight:400;color:var(--g300)}
-    .yt-arrow{color:var(--g300);font-size:14px;padding:0 6px;flex-shrink:0;padding-top:14px}
-
-    /* 분석 텍스트 박스 */
-    .atb{background:var(--g50);border-radius:10px;padding:12px 14px;margin-bottom:10px;border:1px solid var(--g100)}
-    .atb-label{font-size:10px;font-weight:700;color:var(--navy);letter-spacing:.5px;text-transform:uppercase;margin-bottom:6px}
-    .atb-text{font-size:12px;color:var(--g700);line-height:1.75}
-
-    /* 4종 지표 */
-    .ab-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--g100)}
+    .ab-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
     .ab-metric{background:var(--g50);border-radius:8px;padding:10px;text-align:center;border:1px solid var(--g100)}
     .ab-metric-lbl{font-size:10px;color:var(--g400);margin-bottom:4px;letter-spacing:.2px}
     .ab-metric-val{font-size:13px;font-weight:800;color:var(--navy)}
@@ -280,37 +234,18 @@
     .rc-method{font-size:11px;color:var(--g500);margin-bottom:10px;line-height:1.5}
     .rc-report{font-size:12px;color:var(--g600);line-height:1.7;padding-top:10px;border-top:1px solid var(--g100)}
 
-    /* ══ WISH INPUT ══ */
-    .wish-col-hd{display:grid;grid-template-columns:1fr 1fr 1fr 28px;gap:8px;margin-bottom:6px}
-    .wish-col-hd span{font-size:11px;font-weight:600;color:var(--g400);letter-spacing:.2px;padding-left:2px}
-    .wish-row{display:grid;grid-template-columns:1fr 1fr 1fr 28px;gap:8px;align-items:center;margin-bottom:8px}
-    .wish-row input{padding:9px 11px;border:1.5px solid var(--g200);border-radius:8px;font-size:13px;color:var(--g900);background:#fff;outline:none;transition:border-color .15s;font-family:inherit;width:100%}
-    .wish-row input:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(26,46,85,.08)}
-    .wish-del{width:28px;height:28px;border-radius:6px;background:var(--red-bg);border:none;color:var(--red);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;font-weight:400;padding:0}
-    .wish-del:hover{background:#FECACA}
-    .wish-add{display:flex;align-items:center;gap:6px;padding:9px 14px;background:var(--navy-lt);border:1.5px dashed rgba(26,46,85,.25);border-radius:8px;font-size:13px;font-weight:700;color:var(--navy);cursor:pointer;width:100%;justify-content:center;margin-top:4px;font-family:inherit}
-    .wish-add:hover{background:var(--blue-lt);border-color:var(--blue)}
-    .wish-empty{text-align:center;padding:20px;font-size:12px;color:var(--g400)}
-
-    /* ══ RESULT WISH TAB ══ */
-    .wish-card-label{font-size:11px;font-weight:600;color:var(--g500);background:var(--g100);border-radius:5px;padding:2px 8px;display:inline-block;margin-bottom:6px}
-
     @media(max-width:500px){
       .mode-grid{grid-template-columns:1fr}
       .row2{grid-template-columns:1fr}
-      .grade-grid{grid-template-columns:1fr 1fr}
       .ab-metrics{grid-template-columns:1fr 1fr}
       .intro-arrow{display:none}
       .rc-table{font-size:11px}
-      .grade-card-val{font-size:18px}
-      .wish-col-hd{grid-template-columns:1fr 1fr 1fr 28px}
-      .wish-row{grid-template-columns:1fr 1fr 1fr 28px}
     }
   </style>
 </head>
 <body>
 <div id="root"></div>
-<script id="app-src" type="text/plain">
+<script type="text/babel">
 const { useState, useCallback, useEffect } = React;
 
 const POSS = {
@@ -335,37 +270,29 @@ const STEPS = [
 
 const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
-async function extractPdfText(file, maxPages = 10) {
-  const lib = window.pdfjsLib;
-  if (!lib) throw new Error('PDF.js 로드 실패');
-  lib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
-  const buf = await file.arrayBuffer();
-  const pdf = await lib.getDocument({ data: buf }).promise;
-  const pages = Math.min(pdf.numPages, maxPages);
-  let out = '';
-  for (let i = 1; i <= pages; i++) {
-    const pg = await pdf.getPage(i);
-    const ct = await pg.getTextContent();
-    out += ct.items.map(it => it.str).join(' ') + '\n';
-  }
-  return out.trim().slice(0, 5000); // payload 안전 상한
+async function extractPdfText(file) {
+  try {
+    if (!window.pdfjsLib) return '';
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await window.pdfjsLib.getDocument({ data: new Uint8Array(arrayBuffer) }).promise;
+    let text = '';
+    for (let i = 1; i <= Math.min(pdf.numPages, 20); i++) {
+      const page = await pdf.getPage(i);
+      const content = await page.getTextContent();
+      text += content.items.map(item => item.str).join(' ') + '\n';
+    }
+    return text.trim().slice(0, 5000);
+  } catch(e) { console.error('PDF 추출 오류:', e); return ''; }
 }
 
 /* ── HomeScreen ── */
 function HomeScreen({ onStart }) {
-  const [showHistory, setShowHistory] = useState(false);
   return (
     <div className="home-wrap">
       <div className="home-top">
-        <div className="home-wordmark" style={{display:'flex',alignItems:'center',justifyContent:'center',gap:8}}>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1A2E55" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3 10.5L12 3L21 10.5V21H15V15H9V21H3V10.5Z"/>
-            <rect x="6.5" y="11.5" width="3" height="3" rx="0.4" fill="#1A2E55" stroke="none"/>
-            <rect x="14.5" y="11.5" width="3" height="3" rx="0.4" fill="#1A2E55" stroke="none"/>
-          </svg>
-          Uni<span>Choice</span>
-        </div>
+        <div className="home-wordmark">Uni<span>Choice</span></div>
         <div className="home-sub">생기부 · 내신 기반 대입 수시 배치 분석</div>
       </div>
       <div className="home-divider" />
@@ -398,38 +325,13 @@ function HomeScreen({ onStart }) {
         </div>
       </div>
       <div className="home-minis">
-        <div className="home-mini" style={{cursor:'pointer',flexDirection:'column',alignItems:'stretch'}}
-             onClick={() => setShowHistory(h => !h)}>
-          <div style={{display:'flex',alignItems:'center',gap:10}}>
-            <div className="home-mini-ico" style={{background:'#374151'}}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 6 12 12 16 14"/>
-              </svg>
-            </div>
-            <div>
-              <div className="home-mini-t">최근 분석 이력</div>
-              <div className="home-mini-s">최근 상담 학생 목록</div>
-            </div>
-          </div>
-          {showHistory && (
-            <div style={{marginTop:10,paddingTop:10,borderTop:'1px solid #F3F4F6',fontSize:11,color:'#9CA3AF',textAlign:'center'}}>
-              아직 분석 이력이 없습니다
-            </div>
-          )}
+        <div className="home-mini">
+          <div className="home-mini-ico" style={{ background:'#1A2E55' }}>DB</div>
+          <div><div className="home-mini-t">입결 데이터</div><div className="home-mini-s">2021–2026 대교협</div></div>
         </div>
         <div className="home-mini">
-          <div className="home-mini-ico" style={{background:'#1A2E55'}}>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-              <ellipse cx="12" cy="5" rx="9" ry="3"/>
-              <path d="M21 12c0 1.657-4.03 3-9 3S3 13.657 3 12"/>
-              <path d="M3 5v14c0 1.657 4.03 3 9 3s9-1.343 9-3V5"/>
-            </svg>
-          </div>
-          <div>
-            <div className="home-mini-t">입결 DB 현황</div>
-            <div className="home-mini-s">교과 9,892건 · 종합 6,237건</div>
-          </div>
+          <div className="home-mini-ico" style={{ background:'#047857' }}>AI</div>
+          <div><div className="home-mini-t">AI 자동 분석</div><div className="home-mini-s">Claude 기반 배치</div></div>
         </div>
       </div>
     </div>
@@ -446,9 +348,8 @@ function Header({ onHome }) {
           <div className="hdr-title">UniChoice</div>
           <div className="hdr-sub">AI 수시 배치 분석</div>
         </div>
-        <span style={{width:1,height:20,background:'rgba(255,255,255,.18)',display:'inline-block',margin:'0 6px'}} />
-        <span className="hdr-year">2027학년도</span>
       </div>
+      <span className="hdr-year">2027학년도</span>
     </header>
   );
 }
@@ -515,29 +416,19 @@ function StudentCard({ form, update, submitted }) {
   );
 }
 
+const REC_TABS = [
+  { key: 'text', label: '텍스트 붙여넣기' },
+  { key: 'pdf',  label: 'PDF 업로드' },
+  { key: 'image',label: '이미지 업로드' },
+];
+
 function RecordCard({ form, update }) {
   const [tab, setTab] = useState('text');
-  const [pdfName, setPdfName] = useState('');
-  const [pdfLoading, setPdfLoading] = useState(false);
-  const [pdfMsg, setPdfMsg] = useState('');
+  const [pdfFile, setPdfFile] = useState(null);
+  const [imgFiles, setImgFiles] = useState([]);
   const len = form.record.length;
   const isGood = len >= 500;
   const isWarn = len > 0 && len < 200;
-
-  const handlePdf = async e => {
-    const f = e.target.files[0]; if (!f) return;
-    setPdfName(f.name); setPdfLoading(true); setPdfMsg(''); update('record', '');
-    try {
-      const text = await extractPdfText(f, 10);
-      if (!text) throw new Error('텍스트를 추출할 수 없습니다 (스캔 이미지 PDF는 지원 불가)');
-      update('record', text);
-      setPdfMsg(`✓ ${text.length.toLocaleString()}자 추출 완료`);
-    } catch(err) {
-      setPdfMsg('오류: ' + err.message);
-      setPdfName('');
-    }
-    setPdfLoading(false);
-  };
 
   return (
     <div className="card">
@@ -548,11 +439,19 @@ function RecordCard({ form, update }) {
           <div className="sec-sub">AI가 내신 · 비교과 자동 추출 및 분석</div>
         </div>
       </div>
-
+      <div className="notice-box">
+        <div className="notice-box-icon">
+          <svg viewBox="0 0 12 12"><path d="M6 1a5 5 0 100 10A5 5 0 006 1zm0 2.5a.75.75 0 110 1.5.75.75 0 010-1.5zM5.25 6h1.5v3h-1.5V6z"/></svg>
+        </div>
+        <div className="notice-box-text">
+          <strong>나이스 또는 학교 포털에서 생기부 전문 복사</strong> 후 붙여넣으세요.
+          내신 등급·비교과 활동을 AI가 자동 분석하여 배치 전략을 수립합니다.
+        </div>
+      </div>
       <div className="rec-tabs">
-        {[['text','텍스트 붙여넣기'],['pdf','PDF 업로드']].map(([k,l]) =>
-          <button key={k} className={`rec-tab ${tab===k?'active':''}`}
-            onClick={() => setTab(k)} type="button">{l}</button>)}
+        {REC_TABS.map(t =>
+          <button key={t.key} className={`rec-tab ${tab === t.key ? 'active' : ''}`}
+            onClick={() => setTab(t.key)} type="button">{t.label}</button>)}
       </div>
 
       {tab === 'text' && (
@@ -564,86 +463,36 @@ function RecordCard({ form, update }) {
             {isWarn ? <span className="char-warn">500자 이상 입력 권장</span>
               : isGood ? <span className="char-ok">분석에 충분합니다</span>
               : <span />}
-            <span className={`char-cnt ${isGood?'char-ok':''}`}>{len.toLocaleString()}자</span>
+            <span className={`char-cnt ${isGood ? 'char-ok' : ''}`}>{len.toLocaleString()}자</span>
           </div>
         </div>
       )}
 
       {tab === 'pdf' && (
-        <div>
-          <label className={`upload-zone ${pdfName && !pdfLoading ? 'has-file' : ''}`}
-                 style={pdfLoading ? {opacity:.65, pointerEvents:'none'} : {}}>
-            <input type="file" accept=".pdf" onChange={handlePdf} />
-            <div className="upload-title">
-              {pdfLoading ? '텍스트 추출 중...' : pdfName || 'PDF 파일을 클릭하거나 드래그'}
-            </div>
-            <div className="upload-desc">
-              {pdfLoading
-                ? '잠시만 기다려주세요'
-                : pdfName
-                  ? pdfMsg
-                  : '앞 10페이지 텍스트만 추출 · base64 전혀 없음 · 나이스 출력 PDF'}
-            </div>
-            <span className="upload-hint">.pdf · 텍스트 레이어가 있는 PDF만 가능</span>
-          </label>
-          {pdfMsg.startsWith('오류') && (
-            <div className="err-msg" style={{marginTop:8}}>{pdfMsg}</div>
-          )}
-          {pdfMsg.startsWith('✓') && (
-            <div style={{marginTop:8,padding:'9px 12px',background:'#D1FAE5',borderRadius:8,fontSize:12,color:'#047857',fontWeight:600}}>
-              {pdfMsg} · 전송 payload: ~{(len/1024).toFixed(1)}KB (텍스트만)
-            </div>
-          )}
-        </div>
+        <label className={`upload-zone ${pdfFile ? 'has-file' : ''}`}>
+          <input type="file" accept=".pdf" onChange={async e => {
+            const f = e.target.files[0]; if (!f) return;
+            setPdfFile(f);
+            const txt = await extractPdfText(f);
+            if (txt && txt.trim().length > 50) update('record', txt);
+          }} />
+          <div className="upload-title">{pdfFile ? pdfFile.name : 'PDF 파일을 클릭하거나 드래그'}</div>
+          <div className="upload-desc">{pdfFile ? `${(pdfFile.size / 1024).toFixed(0)} KB · 업로드 완료` : '나이스에서 출력한 생기부 PDF'}</div>
+          <span className="upload-hint">.pdf 파일만 지원</span>
+        </label>
       )}
-    </div>
-  );
-}
 
-/* ── WishesCard ── */
-function WishesCard({ wishes, setWishes }) {
-  const addRow = () => {
-    if (wishes.length >= 6) return;
-    setWishes(w => [...w, { university: '', department: '', program: '' }]);
-  };
-  const delRow = i => setWishes(w => w.filter((_, idx) => idx !== i));
-  const upd = (i, key, val) => setWishes(w => w.map((r, idx) => idx === i ? {...r, [key]: val} : r));
-
-  return (
-    <div className="card">
-      <div className="sec-head">
-        <div className="sec-icon">03</div>
-        <div>
-          <div className="sec-title">희망대학 입력</div>
-          <div className="sec-sub">최대 6개 · 각 대학별 상세 분석 레포트 생성</div>
-        </div>
-      </div>
-      {wishes.length > 0 && (
-        <div className="wish-col-hd">
-          <span>대학명</span><span>학과명</span><span>전형명</span><span></span>
-        </div>
+      {tab === 'image' && (
+        <label className={`upload-zone ${imgFiles.length ? 'has-file' : ''}`}>
+          <input type="file" accept="image/jpeg,image/png" multiple onChange={e => {
+            const fs = Array.from(e.target.files);
+            if (fs.length) { setImgFiles(fs); update('recordFiles', fs); }
+          }} />
+          <div className="upload-title">{imgFiles.length ? `${imgFiles.length}개 이미지 선택됨` : '이미지를 클릭하거나 드래그'}</div>
+          <div className="upload-desc">{imgFiles.length ? imgFiles.map(f => f.name).join(', ') : '여러 장 선택 가능 (페이지별)'}</div>
+          <span className="upload-hint">JPG · PNG 지원</span>
+        </label>
       )}
-      {wishes.map((w, i) => (
-        <div key={i} className="wish-row">
-          <input type="text" placeholder="예: 연세대학교" value={w.university}
-            onChange={e => upd(i, 'university', e.target.value)} />
-          <input type="text" placeholder="예: 사학과" value={w.department}
-            onChange={e => upd(i, 'department', e.target.value)} />
-          <input type="text" placeholder="예: 학생부종합" value={w.program}
-            onChange={e => upd(i, 'program', e.target.value)} />
-          <button className="wish-del" type="button" onClick={() => delRow(i)}>×</button>
-        </div>
-      ))}
-      {wishes.length === 0 && (
-        <div className="wish-empty">+ 버튼으로 희망대학을 추가하면 각 대학별 합격가능성·3개년 입결을 분석합니다</div>
-      )}
-      {wishes.length < 6
-        ? <button className="wish-add" type="button" onClick={addRow}>
-            <span style={{fontSize:18,lineHeight:1}}>+</span>
-            희망대학 추가{wishes.length > 0 ? ` (${wishes.length}/6)` : ''}
-          </button>
-        : <div style={{textAlign:'center',fontSize:12,color:'var(--g400)',paddingTop:8}}>최대 6개까지 입력 가능합니다</div>
-      }
     </div>
   );
 }
@@ -652,7 +501,7 @@ function OptionCard({ form, update }) {
   return (
     <div className="card">
       <div className="sec-head">
-        <div className="sec-icon">04</div>
+        <div className="sec-icon">03</div>
         <div>
           <div className="sec-title">전형 옵션</div>
           <div className="sec-sub">추가 전형 포함 여부 설정</div>
@@ -719,81 +568,25 @@ function AnalyzingScreen() {
 
 /* ── AnalysisBox ── */
 function AnalysisBox({ analysis, strategy }) {
-  const sg = analysis.subjectGrades || {};
-  const gy = analysis.gradesByYear || {};
+  const { majorFit, activityFocus, academicGrowth, overallCompetitiveness } = analysis;
   const cc = { '상':'#047857', '중':'#1D4ED8', '하':'#B91C1C' };
   const cb = { '상':'#D1FAE5', '중':'#DBEAFE', '하':'#FEE2E2' };
-  const c = analysis.overallCompetitiveness || '중';
-  const fmt = v => v != null ? Number(v).toFixed(2) : null;
-  const hasYear = gy['1학년'] != null || gy['2학년'] != null || gy['3학년'] != null;
-
+  const c = overallCompetitiveness || '중';
   return (
     <div className="analysis-box">
       <div className="ab-header">
-        <span className="ab-title">내신 분석</span>
+        <span className="ab-title">생기부 경쟁력 분석</span>
         <span className="comp-badge" style={{ color: cc[c], background: cb[c] }}>종합 {c}</span>
       </div>
-
-      {/* 4종 내신 평균 */}
-      <div className="grade-grid">
-        {[['전교과', sg['전교과']], ['국영수사과', sg['국영수사과']], ['국영수사', sg['국영수사']], ['국영수', sg['국영수']]].map(([k, v]) => (
-          <div key={k} className="grade-card">
-            <div className="grade-card-lbl">{k}</div>
-            {fmt(v)
-              ? <div className="grade-card-val">{fmt(v)}</div>
-              : <div className="grade-card-val na">-</div>}
-          </div>
-        ))}
-      </div>
-
-      {/* 학년별 추이 */}
-      {hasYear && (
-        <div className="year-trend">
-          {['1학년','2학년','3학년'].map((yr, i) => (
-            <React.Fragment key={yr}>
-              <div className="yt-item">
-                <div className="yt-label">{yr}</div>
-                {gy[yr] != null
-                  ? <div className="yt-val">{Number(gy[yr]).toFixed(2)}</div>
-                  : <div className="yt-val na">-</div>}
-              </div>
-              {i < 2 && <span className="yt-arrow">→</span>}
-            </React.Fragment>
-          ))}
-        </div>
-      )}
-
-      {/* 교과 분석 */}
-      {analysis.subjectAnalysis && (
-        <div className="atb">
-          <div className="atb-label">교과 분석</div>
-          <div className="atb-text">{analysis.subjectAnalysis}</div>
-        </div>
-      )}
-
-      {/* 비교과 분석 */}
-      {analysis.extracurricularAnalysis && (
-        <div className="atb">
-          <div className="atb-label">비교과 분석</div>
-          <div className="atb-text">{analysis.extracurricularAnalysis}</div>
-        </div>
-      )}
-
-      {/* 4종 생기부 지표 */}
       <div className="ab-metrics">
-        {[['전공적합성', analysis.majorFit], ['활동집중도', analysis.activityFocus], ['학업성장성', analysis.academicGrowth], ['비교과품질', analysis.extracurricularQuality]].map(([k, v]) => (
+        {[['전공적합성', majorFit], ['활동집중도', activityFocus], ['학업성장성', academicGrowth], ['비교과품질', analysis.extracurricularQuality]].map(([k, v]) => (
           <div key={k} className="ab-metric">
             <div className="ab-metric-lbl">{k}</div>
             <div className="ab-metric-val">{v || '-'}</div>
           </div>
         ))}
       </div>
-
-      {strategy && (
-        <div style={{ marginTop:12, fontSize:11, color:'#6B7280', lineHeight:1.6, paddingTop:12, borderTop:'1px solid #F3F4F6' }}>
-          {strategy}
-        </div>
-      )}
+      {strategy && <div style={{ marginTop:12, fontSize:11, color:'#6B7280', lineHeight:1.5, paddingTop:10, borderTop:'1px solid #F3F4F6' }}>{strategy}</div>}
     </div>
   );
 }
@@ -892,20 +685,9 @@ function ResultCard({ card, idx }) {
 }
 
 /* ── Word Export ── */
-function loadDocxLib() {
-  if (window.docx) return Promise.resolve(window.docx);
-  return new Promise((resolve, reject) => {
-    const s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/docx@7.8.2/build/index.umd.js';
-    s.onload = () => resolve(window.docx);
-    s.onerror = () => reject(new Error('docx 라이브러리 로드 실패'));
-    document.head.appendChild(s);
-  });
-}
-
 async function exportToWord(result, form) {
   try {
-    const D = await loadDocxLib();
+    const D = window.docx;
     if (!D) { alert('docx 라이브러리 로드 실패'); return; }
     const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
             HeadingLevel, AlignmentType, WidthType, BorderStyle } = D;
@@ -1002,10 +784,6 @@ async function exportToWord(result, form) {
 
 /* ── ResultScreen ── */
 function ResultScreen({ result, form, onHome }) {
-  const wishCards = result.wishCards || [];
-  const cards = result.cards || [];
-  const defaultTab = wishCards.length > 0 ? 'wish' : 'cards';
-  const [tab, setTab] = useState(defaultTab);
   const [exporting, setExporting] = useState(false);
   const handleExport = async () => {
     setExporting(true);
@@ -1018,63 +796,19 @@ function ResultScreen({ result, form, onHome }) {
       <Header onHome={onHome} />
       <StepProgress step={3} />
       <main className="main" style={{ paddingBottom: 40 }}>
-        {/* 탭 */}
-        <div className="res-tabs">
-          <button className={`res-tab ${tab === 'analysis' ? 'active' : ''}`}
-                  onClick={() => setTab('analysis')}>분석</button>
-          {wishCards.length > 0 && (
-            <button className={`res-tab ${tab === 'wish' ? 'active' : ''}`}
-                    onClick={() => setTab('wish')}>희망대학 {wishCards.length}개</button>
-          )}
-          <button className={`res-tab ${tab === 'cards' ? 'active' : ''}`}
-                  onClick={() => setTab('cards')}>AI추천대학 {cards.length}장</button>
+        {result.student?.analysis && (
+          <AnalysisBox analysis={result.student.analysis} strategy={result.student.strategy} />
+        )}
+        <div className="result-hd">
+          <h2>배치 후보 {(result.cards || []).length}장</h2>
+          <button className="export-btn" onClick={handleExport} disabled={exporting}>
+            {exporting ? '출력 중...' : 'Word 출력'}
+          </button>
         </div>
-
-        {/* 분석 탭 */}
-        {tab === 'analysis' && (
-          result.student?.analysis
-            ? <AnalysisBox analysis={result.student.analysis} strategy={result.student.strategy} />
-            : <div style={{textAlign:'center',color:'#9CA3AF',padding:'40px 0',fontSize:13}}>분석 데이터 없음</div>
-        )}
-
-        {/* 희망대학 레포트 탭 */}
-        {tab === 'wish' && (
-          <>
-            <div className="section-hd">
-              <h3>희망대학 레포트 {wishCards.length}개</h3>
-              <button className="export-btn" onClick={handleExport} disabled={exporting}>
-                {exporting ? '출력 중...' : 'Word 출력'}
-              </button>
-            </div>
-            <div style={{fontSize:11,color:'#6B7280',marginBottom:14,padding:'8px 12px',background:'#F9FAFB',borderRadius:8,border:'1px solid #E5E7EB'}}>
-              합격가능성 · 0~20% <span style={{color:'#B91C1C',fontWeight:700}}>위험</span> / 20~40% <span style={{color:'#B45309',fontWeight:700}}>소신</span> / 40~60% <span style={{color:'#1D4ED8',fontWeight:700}}>적정</span> / 60~80% <span style={{color:'#047857',fontWeight:700}}>안정</span> / 80~100% <span style={{color:'#374151',fontWeight:700}}>하향</span>
-            </div>
-            {wishCards.map((card, i) => (
-              <div key={i}>
-                <div className="wish-card-label">희망 {i + 1} · {form.wishes?.[i]?.university || card.university}</div>
-                <ResultCard card={card} idx={i} />
-              </div>
-            ))}
-          </>
-        )}
-
-        {/* AI 추천대학 탭 */}
-        {tab === 'cards' && (
-          <>
-            <div className="section-hd">
-              <h3>AI 추천대학 {cards.length}장</h3>
-              <button className="export-btn" onClick={handleExport} disabled={exporting}>
-                {exporting ? '출력 중...' : 'Word 출력'}
-              </button>
-            </div>
-            {result.student?.strategy && (
-              <div style={{fontSize:11,color:'#6B7280',marginBottom:14,lineHeight:1.6,padding:'10px 14px',background:'#F9FAFB',borderRadius:8,border:'1px solid #E5E7EB'}}>
-                {result.student.strategy}
-              </div>
-            )}
-            {cards.map((card, i) => <ResultCard key={i} card={card} idx={i} />)}
-          </>
-        )}
+        <div className="result-strategy">
+          {result.student?.strategy || ''}
+        </div>
+        {(result.cards || []).map((card, i) => <ResultCard key={i} card={card} idx={i} />)}
       </main>
     </>
   );
@@ -1085,8 +819,7 @@ function App() {
   const [screen, setScreen] = useState('home');
   const [form, setForm] = useState({
     name:'', school:'', major:'', record:'',
-    hasEssay: false,
-    wishes: [],
+    recordFile: null, recordFiles: [], hasEssay: false,
   });
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -1098,24 +831,15 @@ function App() {
     if (!isFormValid(form)) return;
     setScreen('analyzing'); setError(null);
     try {
-      const validWishes = (form.wishes || []).filter(w => w.university.trim());
       const payload = {
         name: form.name, school: form.school, major: form.major,
         record: (form.record || '').slice(0, 5000),
         hasEssay: form.hasEssay,
-        wishes: validWishes.length ? validWishes : null,
       };
-      const payloadJson = JSON.stringify(payload);
-      console.log('[UniChoice v8] payload keys:', Object.keys(payload));
-      console.log('[UniChoice v8] payload size:', payloadJson.length, 'bytes (', (payloadJson.length / 1024).toFixed(1), 'KB )');
-      console.log('[UniChoice v8] record length:', (payload.record || '').length, '자');
-      if (payloadJson.length > 100000) {
-        throw new Error(`전송 데이터 초과 (${(payloadJson.length/1024).toFixed(0)}KB). 생기부 텍스트를 줄여주세요.`);
-      }
       const res = await fetch('/api/proxy', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: payloadJson,
+        body: JSON.stringify(payload),
       });
       if (!res.ok) {
         const t = await res.text().catch(() => '');
@@ -1155,7 +879,6 @@ function App() {
         </div>
         <StudentCard form={form} update={update} submitted={submitted} />
         <RecordCard form={form} update={update} />
-        <WishesCard wishes={form.wishes} setWishes={ws => update('wishes', ws)} />
         <OptionCard form={form} update={update} />
       </main>
       <SubmitBar onClick={handleAnalyze} valid={isFormValid(form)} />
