@@ -193,13 +193,13 @@ JSON 형식으로만 응답 (다른 텍스트 없이):
             .not('grade70', 'is', null)
             .neq('grade_quality', 'placeholder')
             .order('grade70', { ascending: true })
-            .limit(30);
+            .limit(20);
           wishData = wData || [];
           const { data: gData } = await supabase
             .from('uc_gyogwa_2027')
             .select('region,university,program_name,major,method,suneung_yn,suneung_min,subject_range')
             .or(wishOr)
-            .limit(30);
+            .limit(20);
           (gData || []).forEach(s => {
             const key = `${s.university}|${s.program_name}`;
             if (!suneungMap[key]) {
@@ -368,23 +368,31 @@ JSON 객체만 응답 (마크다운·설명 없이):
       cards = generateFallback(major, grade, hasEssay, analysis, jonghapCnt, gyogwaCnt, nonSulCnt);
     }
 
-    // 수능최저 DB 정보 보강 (wishCards + recCards)
+    // 분석 텍스트 필드 길이 제한
+    if (analysis.subjectAnalysis) analysis.subjectAnalysis = analysis.subjectAnalysis.slice(0, 200);
+    if (analysis.extracurricularAnalysis) analysis.extracurricularAnalysis = analysis.extracurricularAnalysis.slice(0, 200);
+    if (analysis.gradeNote) analysis.gradeNote = analysis.gradeNote.slice(0, 150);
+
+    // 수능최저 DB 정보 보강 + aiReport 길이 제한
     const enrichCard = card => {
       const sInfo = suneungMap[`${card.university}|${card.programName}`];
       if (sInfo) {
         if (!card.suneungMin || card.suneungMin === '정보없음') card.suneungMin = sInfo.suneungMin;
         if (!card.admissionMethod || card.admissionMethod === '-') card.admissionMethod = sInfo.admissionMethod;
       }
+      if (card.aiReport && card.aiReport.length > 250) card.aiReport = card.aiReport.slice(0, 250);
       return card;
     };
     wishCards = wishCards.map(enrichCard);
     cards = cards.map(enrichCard);
 
-    return res.status(200).json({
+    const responseBody = {
       student: { name, school, major, analysis, strategy: strategyDesc },
-      wishCards: wishCards.slice(0, 6),
-      cards: cards.slice(0, Math.min(totalCards, 7)),
-    });
+      wishCards: wishCards.slice(0, 5),
+      cards: cards.slice(0, Math.min(totalCards, 6)),
+    };
+    console.log(`응답 크기: ${Buffer.byteLength(JSON.stringify(responseBody), 'utf8')} bytes`);
+    return res.status(200).json(responseBody);
 
   } catch (err) {
     console.error('proxy.js 오류:', err);
