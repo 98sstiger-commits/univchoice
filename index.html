@@ -6,13 +6,13 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <!-- UniChoice v8 2026-06-16 -->
+  <!-- UniChoice v8 2026-06-17 -->
   <title>UniChoice | 필탑</title>
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 
   <style>
     [id*="accessibility"],[class*="accessibility"],[id*="userway"],[class*="userway"],
@@ -322,10 +322,10 @@ const STEPS = [
 const isFormValid = f => f.name.trim() && f.school.trim() && f.major.trim();
 
 async function extractPdfText(file, maxPages = 10) {
-  const lib = window['pdfjs-dist/build/pdf'];
+  const lib = window.pdfjsLib;
   if (!lib) throw new Error('PDF.js 로드 실패');
   lib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
   const buf = await file.arrayBuffer();
   const pdf = await lib.getDocument({ data: buf }).promise;
   const pages = Math.min(pdf.numPages, maxPages);
